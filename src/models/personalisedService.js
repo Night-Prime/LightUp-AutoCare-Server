@@ -4,7 +4,7 @@
 
  const { model, Schema } = require('mongoose');
 
- const ServiceSchema = new Schema({
+ const PersonalisedServiceSchema = new Schema({
      id: {
          type: Number,
          required: true,
@@ -44,5 +44,5 @@
      },
  });
  
- model('Service', ServiceSchema);
+ model('PersonalisedService', PersonalisedServiceSchema);
  
