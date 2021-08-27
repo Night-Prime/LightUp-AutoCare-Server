@@ -12,6 +12,7 @@ const helmet = require('helmet');
 const { morgan } = require('./src/utilities/logger');
 const { loadEventSystem } = require('./src/events/_loader');
 const { connect, loadModels } = require('./src/models/_config');
+const RedisDB = require('./src/database/redis/redis');
 
 const { APP_PORT } = process.env;
 
@@ -19,6 +20,7 @@ const { APP_PORT } = process.env;
 const app = express();
 
 /** Database Connection Setup */
+RedisDB.connect();
 connect();
 loadModels();
 loadEventSystem();
