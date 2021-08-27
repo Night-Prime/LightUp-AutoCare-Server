@@ -30,6 +30,7 @@ class Controller {
     async createRecord(data) {
         try {
             const n = (await this.model.estimatedDocumentCount()) + 1;
+
             const recordToCreate = new this.model({ id: n, ...data });
             const createdRecord = await recordToCreate.save();
 

@@ -14,9 +14,10 @@ module.exports.connect = () => {
         mongoose.connect(
             APP_DB_URI,
             {
-                autoIndex: false,
+                autoIndex: true,
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
+                useCreateIndex: true,
             },
             (err) => {
                 if (err) {
@@ -36,7 +37,6 @@ module.exports.loadModels = () => {
     const files = glob.sync('*.js', { cwd: basePath });
     files.forEach((file) => {
         if (file.toLocaleLowerCase().includes('_config')) return;
-        // eslint-disable-next-line
         require(resolve(basePath, file));
     });
 };
