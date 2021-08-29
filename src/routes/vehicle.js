@@ -3,7 +3,7 @@ const Controller = require('../controllers/index');
 const sampleSchemaValidator = require('../validators/sample');
 
 const vehicleController = new Controller('Vehicle');
-const VehicleService = require('../services/vehicle');
+const VehicleService = require('../services/vehicle/vehicle');
 
 const vehicleService = new VehicleService(vehicleController, sampleSchemaValidator);
 

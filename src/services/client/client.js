@@ -5,7 +5,7 @@ class ClientService extends RootService {
     constructor(sampleController, schemaValidator) {
         /** */
         super();
-        this.clientController = clientController;
+        this.clientController = sampleController;
         this.schemaValidator = schemaValidator;
         this.serviceName = 'ClientService';
     }

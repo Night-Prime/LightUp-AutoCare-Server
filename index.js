@@ -12,7 +12,6 @@ const helmet = require('helmet');
 const { morgan } = require('./src/utilities/logger');
 const { loadEventSystem } = require('./src/events/_loader');
 const { connect, loadModels } = require('./src/models/_config');
-const RedisDB = require('./src/database/redis/redis');
 
 const { APP_PORT } = process.env;
 
@@ -20,7 +19,6 @@ const { APP_PORT } = process.env;
 const app = express();
 
 /** Database Connection Setup */
-RedisDB.connect();
 connect();
 loadModels();
 loadEventSystem();
@@ -37,6 +35,6 @@ app.use(morgan);
 app.use('/', require('./src/routes/_config'));
 
 /** Starting Server */
-app.listen(APP_PORT, () => {
+app.listen(8080 || APP_PORT, () => {
     console.log(`Server started on port ${APP_PORT}`);
 });

@@ -3,7 +3,7 @@ const Controller = require('../controllers/index');
 const sampleSchemaValidator = require('../validators/sample');
 
 const quoteController = new Controller('Quote');
-const QuoteService = require('../services/quote');
+const QuoteService = require('../services/quote/quote');
 
 const quoteService = new QuoteService(quoteController, sampleSchemaValidator);
 

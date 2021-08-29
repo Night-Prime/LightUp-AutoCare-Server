@@ -7,7 +7,7 @@ class QuoteService extends RootService {
         super();
         this.quoteController = quoteController;
         this.schemaValidator = schemaValidator;
-        this.serviceName = 'ClientService';
+        this.serviceName = 'QuoteService';
     }
 
     async createRecord(request, next) {
@@ -107,7 +107,12 @@ class QuoteService extends RootService {
 
             if (!id) throw new Error('Invalid ID supplied.');
 
-            const result = await this.quoteController.updateRecords({ id }, { ...data });
+            const record = await this.quoteController.readRecords({ id, isActive: true });
+            if (!record[0].isPending === true) {
+                throw new Error('This record is not pending');
+            } else {
+                const result = await this.quoteController.updateRecords({ id }, { ...data });
+            }
             if (result.failed) {
                 throw new Error(result.error);
             } else {
@@ -186,4 +191,4 @@ class QuoteService extends RootService {
     }
 }
 
-module.exports = ClientService;
+module.exports = QuoteService;

@@ -42,15 +42,16 @@
     "type": "git",
     "url": "https://github.com/Sobowale-Olayiwola"
   },
-  "contributors": [{
-    "name" : "Olayiwola Sobowale",
-    "email" : "layitheinfotechguru@gmail.com"
-  },
-  {
-    "name" : "Vwede Oteghele",
-    "email" : "ovwede@atbtechsoft.com"
-  }
-],
+  "contributors": [
+    {
+      "name": "Olayiwola Sobowale",
+      "email": "layitheinfotechguru@gmail.com"
+    },
+    {
+      "name": "Vwede Oteghele",
+      "email": "ovwede@atbtechsoft.com"
+    }
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Sobowale-Olayiwola/LightUp-AutoCare/issues"

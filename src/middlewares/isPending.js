@@ -1,5 +1,1 @@
-function isPending(request, response, next) {
-
-}
-
-module.exports = isPending
+module.exports = isPending;
