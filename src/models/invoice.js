@@ -9,37 +9,36 @@ const InvoiceSchema = new Schema({
     },
     clientId: {
         type: Number,
-        required: true
+        required: true,
     },
     vehicleId: {
         type: Number,
-        required: true
+        required: true,
     },
-    items: 
-        [
-            { 
-                item: {
-                    type: String,
-                    required: true,
-                    default: "Basic Service",
-                },
-                unit: {
-                    type: Number,
-                    required: true,
-                    default: 1
-                },
-                rate: {
-                    type: Number,
-                    required: true,
-                    default: 1
-                },
-                amount: {
-                    type: Number,
-                    required: true,
-                    min: [1, 'Amount too low']
-                }
-            }
-        ],
+    items: [
+        {
+            item: {
+                type: String,
+                required: true,
+                default: 'Basic Service',
+            },
+            unit: {
+                type: Number,
+                required: true,
+                default: 1,
+            },
+            rate: {
+                type: Number,
+                required: true,
+                default: 1,
+            },
+            amount: {
+                type: Number,
+                required: true,
+                min: [1, 'Amount too low'],
+            },
+        },
+    ],
     // Model Required fields
     isActive: {
         type: Boolean,
