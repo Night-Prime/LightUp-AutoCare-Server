@@ -7,16 +7,17 @@ const ClientSchema = new Schema({
         unique: true,
         default: 0,
     },
-   // Model Required fields
     name: {
         type: String,
-        required: true
+        required: true,
     },
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
     },
+    telephone: Number,
+    // Model Required fields
     isActive: {
         type: Boolean,
         required: true,

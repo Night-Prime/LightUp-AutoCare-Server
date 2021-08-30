@@ -1,4 +1,7 @@
 require('dotenv').config();
+const QuoteService = require('../services/quote/quote');
+let isUserApproved = QuoteService.isApproved;
+
 const jwt = require('jsonwebtoken');
 const responseError = {
     status: 401,
@@ -44,10 +47,11 @@ const verifyToken = (request, response, next) => {
         } else {
             // Append the parameters to the request object
             request.id = decoded.id;
-            request.token = token;
+            request.token = bearerToken;
             request.role = decoded.role;
             next();
         }
     });
 };
+
 module.exports = { checkAccessRight, checkAdminAccess, verifyToken };

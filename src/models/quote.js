@@ -44,6 +44,10 @@ const QuoteSchema = new Schema({
     type: Boolean,
     default: true,
   },
+  isApproved: {
+    type: Boolean,
+    default: false
+  },
 
   // Model Required fields
   isActive: {

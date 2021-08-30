@@ -2,11 +2,11 @@ const RootService = require('../_root');
 const { buildQuery, buildWildcardOptions } = require('../../utilities/query');
 
 class VehicleService extends RootService {
-    constructor(vehicleController, schemaValidator) {
+    constructor(vehicleController, vehicleSchemaValidator) {
         /** */
         super();
-        this.sampleController = vehicleController;
-        this.schemaValidator = schemaValidator;
+        this.vehicleController = vehicleController;
+        this.schemaValidator = vehicleSchemaValidator;
         this.serviceName = 'VehicleService';
     }
 

@@ -1,5 +1,9 @@
 const RootService = require('../_root');
+const EventEmitter = require('events');
 const { buildQuery, buildWildcardOptions } = require('../../utilities/query');
+
+// class QuoteEmitter extends EventEmitter {}
+// const quoteEmitter = new QuoteEmitter();
 
 class QuoteService extends RootService {
     constructor(quoteController, schemaValidator) {
@@ -108,11 +112,15 @@ class QuoteService extends RootService {
             if (!id) throw new Error('Invalid ID supplied.');
 
             const record = await this.quoteController.readRecords({ id, isActive: true });
+            console.log(record);
             if (!record[0].isPending === true) {
                 throw new Error('This record is not pending');
-            } else {
-                const result = await this.quoteController.updateRecords({ id }, { ...data });
             }
+            if (record[0].isApproved && (request.role !== 'admin' || request.role !== 'approver')) {
+                throw new Error('Requires admin or approval privilege');
+            }
+            const result = await this.quoteController.updateRecords({ id }, { ...data });
+
             if (result.failed) {
                 throw new Error(result.error);
             } else {
@@ -192,3 +200,5 @@ class QuoteService extends RootService {
 }
 
 module.exports = QuoteService;
+
+// module.exports = quoteEmitter;

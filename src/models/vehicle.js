@@ -7,17 +7,19 @@ const VehicleSchema = new Schema({
         unique: true,
         default: 0,
     },
-    chassis: {
-        type: Number,
+    vehicleName: {
+        type: String,
+        required: true,
     },
+    chassis: String,
     model: {
         type: String,
-        required: true
+        required: true,
     },
     clientId: {
         type: Number,
         required: true,
-      },
+    },
     // Model Required fields
     isActive: {
         type: Boolean,
