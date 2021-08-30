@@ -1,8 +1,8 @@
-/**
- * @author Oguntuberu Nathan O. <nateoguns.work@gmail.com>
- * */
+const bcrypt = require('bcrypt');
+
 const RootService = require('../_root');
 const { buildQuery, buildWildcardOptions } = require('../../utilities/query');
+const jwt = require('jsonwebtoken');
 
 class StaffService extends RootService {
     constructor(sampleController, schemaValidator) {
@@ -20,6 +20,7 @@ class StaffService extends RootService {
             if (error) throw new Error(error);
 
             delete body.id;
+            body.password = await bcrypt.hash(body.password, 10);
 
             const result = await this.sampleController.createRecord({ ...body });
             if (result.failed) {
@@ -30,6 +31,35 @@ class StaffService extends RootService {
         } catch (e) {
             const err = this.processFailedResponse(
                 `[${this.serviceName}] createRecord: ${e.message}`,
+                500
+            );
+            return next(err);
+        }
+    }
+
+    async authenticateUser(request, next) {
+        try {
+            const { email, password } = request.body;
+
+            const [user] = await this.sampleController.readRecords({ email });
+            if (user.failed) throw new Error(user.error);
+
+            const validPassword = await bcrypt.compare(password, user.password);
+            if (!validPassword) throw new Error('Invalid Password');
+            const token = jwt.sign(
+                { id: user.id, email: user.email, role: user.role },
+                process.env.secret_token,
+                { expiresIn: '24h' }
+            );
+            const result = {
+                message: 'Authentication successful',
+                ...user,
+                token,
+            };
+            return this.processSingleRead(result);
+        } catch (e) {
+            const err = this.processFailedResponse(
+                `[${this.serviceName}] authenticateUser: ${e.message}`,
                 500
             );
             return next(err);
