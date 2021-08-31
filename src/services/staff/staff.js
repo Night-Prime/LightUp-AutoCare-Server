@@ -1,8 +1,7 @@
-const bcrypt = require('bcrypt');
-
 const RootService = require('../_root');
 const { buildQuery, buildWildcardOptions } = require('../../utilities/query');
 const jwt = require('jsonwebtoken');
+const { generateToken, hashObject, verifyObject } = require('../../utilities/packages');
 
 class StaffService extends RootService {
     constructor(sampleController, schemaValidator) {
@@ -20,7 +19,7 @@ class StaffService extends RootService {
             if (error) throw new Error(error);
 
             delete body.id;
-            body.password = await bcrypt.hash(body.password, 10);
+            body.password ? (body.password = await hashObject(body.password)) : body;
 
             const result = await this.sampleController.createRecord({ ...body });
             if (result.failed) {
@@ -44,13 +43,9 @@ class StaffService extends RootService {
             const [user] = await this.sampleController.readRecords({ email });
             if (user.failed) throw new Error(user.error);
 
-            const validPassword = await bcrypt.compare(password, user.password);
+            const validPassword = await verifyObject(password, user.password);
             if (!validPassword) throw new Error('Invalid Password');
-            const token = jwt.sign(
-                { id: user.id, email: user.email, role: user.role },
-                process.env.secret_token,
-                { expiresIn: '24h' }
-            );
+            const token = await generateToken({ id: user.id, email: user.email, role: user.role });
             const result = {
                 message: 'Authentication successful',
                 ...user,
