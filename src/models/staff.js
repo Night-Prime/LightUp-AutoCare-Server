@@ -19,7 +19,7 @@ const StaffSchema = new Schema({
     role: {
         type: String,
         required: true,
-        enum: ['admin', 'staff', 'approver'],
+        enum: ['admin', 'clerk', 'approver'],
     },
     password: {
         type: String,

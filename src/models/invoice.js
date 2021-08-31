@@ -15,6 +15,32 @@ const InvoiceSchema = new Schema({
         type: Number,
         required: true,
     },
+    billingAddress: {
+        name: {
+            type: String,
+            default: 'ATB TECHSOFT',
+        },
+        address: {
+            type: String,
+            default: '8 CMD ROAD',
+        },
+        city: {
+            type: String,
+            default: 'IKOSI KETU ',
+        },
+        postalCode: {
+            type: Number,
+            default: 100248,
+        },
+        state: {
+            type: String,
+            default: 'LAGOS',
+        },
+    },
+    dueDate: {
+        type: Date,
+        default: new Date(new Date().setDate(new Date().getDate() + 7)),
+    },
     items: [
         {
             item: {

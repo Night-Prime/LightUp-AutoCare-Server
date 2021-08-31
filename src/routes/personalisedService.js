@@ -1,47 +1,47 @@
 const router = require('express').Router();
 const Controller = require('../controllers/index');
-const sampleSchemaValidator = require('../validators/sample');
+const personalisedServiceSchemaValidator = require('../validators/personalisedService');
 
 const personalisedServiceController = new Controller('PersonalisedService');
 const PersonalisedService = require('../services/personalisedService/personalisedService');
-const { verifyToken } = require('../middlewares/permission');
+const { verifyToken, checkAdminAccess } = require('../middlewares/permission');
 
 const personalisedService = new PersonalisedService(
     personalisedServiceController,
-    sampleSchemaValidator
+    personalisedServiceSchemaValidator
 );
 
 try {
     router
-        .post('/', verifyToken, async (request, response, next) => {
+        .post('/', verifyToken, checkAdminAccess, async (request, response, next) => {
             request.payload = await personalisedService.createRecord(request, next);
             next();
         })
-        .get('/', async (request, response, next) => {
+        .get('/', verifyToken, async (request, response, next) => {
             request.payload = await personalisedService.readRecordsByFilter(request, next);
             next();
         })
-        .get('/:id', async (request, response, next) => {
+        .get('/:id', verifyToken, async (request, response, next) => {
             request.payload = await personalisedService.readRecordById(request, next);
             next();
         })
-        .get('/search/:keys/:keyword', async (request, response, next) => {
+        .get('/search/:keys/:keyword', verifyToken, async (request, response, next) => {
             request.payload = await personalisedService.readRecordsByWildcard(request, next);
             next();
         })
-        .put('/', async (request, response, next) => {
+        .put('/', verifyToken, checkAdminAccess, async (request, response, next) => {
             request.payload = await personalisedService.updateRecords(request, next);
             next();
         })
-        .put('/:id', async (request, response, next) => {
+        .put('/:id', verifyToken, checkAdminAccess, async (request, response, next) => {
             request.payload = await personalisedService.updateRecordById(request, next);
             next();
         })
-        .delete('/', async (request, response, next) => {
+        .delete('/', verifyToken, checkAdminAccess, async (request, response, next) => {
             request.payload = await personalisedService.deleteRecords(request, next);
             next();
         })
-        .delete('/:id', async (request, response, next) => {
+        .delete('/:id', verifyToken, checkAdminAccess, async (request, response, next) => {
             request.payload = await personalisedService.deleteRecordById(request, next);
             next();
         });
