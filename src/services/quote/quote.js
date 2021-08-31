@@ -121,7 +121,10 @@ class QuoteService extends RootService {
                 throw new Error('Requires admin or approval privilege');
             }
 
-            let arrayToPush = { quoteHistory: { updatedBy: request.id, updatedOn: new Date() } };
+            let arrayToPush = {
+                items: { ...data },
+                quoteHistory: { updatedBy: request.id, updatedOn: new Date() },
+            };
 
             let conditions = { id };
 
@@ -130,7 +133,6 @@ class QuoteService extends RootService {
                 data,
                 arrayToPush
             );
-
             if (result.failed) {
                 throw new Error(result.error);
             } else {
