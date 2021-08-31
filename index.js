@@ -34,7 +34,7 @@ app.use(morgan);
 /** Route Middleware */
 app.use('/', require('./src/routes/_config'));
 
-/** Starting Server */
+/** Starting Server  with process.env.PORT for development environment variable*/
 app.listen(process.env.PORT || APP_PORT, () => {
     console.log(`Server started on port ${APP_PORT}`);
 });
