@@ -50,4 +50,5 @@ const verifyToken = async (request, response, next) => {
             next(responseError);
         });
 };
+
 module.exports = { checkAccessRight, checkAdminAccess, verifyToken };
