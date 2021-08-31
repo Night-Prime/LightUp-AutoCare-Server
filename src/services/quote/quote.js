@@ -130,7 +130,6 @@ class QuoteService extends RootService {
                 data,
                 arrayToPush
             );
-
             if (result.failed) {
                 throw new Error(result.error);
             } else {
