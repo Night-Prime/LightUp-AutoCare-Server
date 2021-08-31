@@ -1,5 +1,5 @@
 require('dotenv').config();
-const jwt = require('jsonwebtoken');
+const { checkToken } = require('../utilities/packages');
 const responseError = {
     status: 401,
     error: 'Invalid Token or No token provided in authorization header',
@@ -32,22 +32,22 @@ function checkAdminAccess(request, response, next) {
     }
 }
 
-const verifyToken = (request, response, next) => {
+const verifyToken = async (request, response, next) => {
     const bearerToken = request.headers['authorization'];
 
     if (!bearerToken) {
         next(responseError);
     }
-    jwt.verify(bearerToken, process.env.secret_token, (error, decoded) => {
-        if (error) {
-            next(responseError);
-        } else {
+    await checkToken(bearerToken)
+        .then((decoded) => {
             // Append the parameters to the request object
             request.id = decoded.id;
-            request.token = token;
+            request.token = bearerToken;
             request.role = decoded.role;
             next();
-        }
-    });
+        })
+        .catch((error) => {
+            next(responseError);
+        });
 };
 module.exports = { checkAccessRight, checkAdminAccess, verifyToken };
