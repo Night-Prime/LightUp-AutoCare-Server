@@ -13,7 +13,7 @@ const { morgan } = require('./src/utilities/logger');
 const { loadEventSystem } = require('./src/events/_loader');
 const { connect, loadModels } = require('./src/models/_config');
 
-const { APP_PORT } = process.env;
+const { APP_PORT, PORT } = process.env;
 
 /** App Initialization */
 const app = express();
@@ -34,7 +34,9 @@ app.use(morgan);
 /** Route Middleware */
 app.use('/', require('./src/routes/_config'));
 
+let ON = PORT || APP_PORT;
+
 /** Starting Server */
-app.listen(APP_PORT, () => {
-    console.log(`Server started on port ${APP_PORT}`);
+app.listen(ON, () => {
+    console.log(`Server started on port ${ON}`);
 });
