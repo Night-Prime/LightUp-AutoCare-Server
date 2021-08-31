@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const Controller = require('../controllers/index');
 const vehicleSchemaValidator = require('../validators/vehicle');
+const { checkAccessRight, verifyToken } = require('../middlewares/permission');
 
 const vehicleController = new Controller('Vehicle');
 const VehicleService = require('../services/vehicle/vehicle');
