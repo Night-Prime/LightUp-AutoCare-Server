@@ -34,7 +34,7 @@ app.use(morgan);
 /** Route Middleware */
 app.use('/', require('./src/routes/_config'));
 
-let ON = APP_PORT || PORT;
+let ON = PORT || APP_PORT;
 
 /** Starting Server */
 app.listen(ON, () => {
