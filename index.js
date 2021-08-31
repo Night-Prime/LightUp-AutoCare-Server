@@ -38,5 +38,5 @@ let ON = PORT || APP_PORT;
 
 /** Starting Server */
 app.listen(ON, () => {
-    console.log(`Server started on port ${APP_PORT}`);
+    console.log(`Server started on port ${ON}`);
 });
