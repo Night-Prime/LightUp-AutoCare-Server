@@ -37,8 +37,7 @@
     "scripts": {
         "start": "node index.js",
         "dev": "nodemon index.js",
-        "test": "nyc --reporter=html mocha --recursive -w -c || true",
-        "web": "npm start"
+        "test": "nyc --reporter=html mocha --recursive -w -c || true"
     },
     "repository": {
         "type": "git",
