@@ -29,14 +29,16 @@ class InvoiceService extends RootService {
             delete body.id;
 
             const [result] = await this.sampleController.createRecord({ ...body });
+            console.log(result);
             if (result.failed) {
                 throw new Error(result.error);
             } else {
-                await createInvoice(result)
+                createInvoice(result)
                     .then(async () => {
                         await sendMailToClient(result).then(() => {});
                     })
                     .catch((error) => {
+                        console.log(error);
                         throw new Error(error);
                     });
                 return this.processSingleRead(result);

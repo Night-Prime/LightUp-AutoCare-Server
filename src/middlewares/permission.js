@@ -44,6 +44,7 @@ const verifyToken = async (request, response, next) => {
             request.id = decoded.id;
             request.token = bearerToken;
             request.role = decoded.role;
+            request.name = decoded.name;
             next();
         })
         .catch((error) => {

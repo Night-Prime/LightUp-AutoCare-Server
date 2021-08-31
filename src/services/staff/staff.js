@@ -45,7 +45,12 @@ class StaffService extends RootService {
 
             const validPassword = await verifyObject(password, user.password);
             if (!validPassword) throw new Error('Invalid Password');
-            const token = await generateToken({ id: user.id, email: user.email, role: user.role });
+            const token = await generateToken({
+                id: user.id,
+                email: user.email,
+                role: user.role,
+                name: user.name,
+            });
             const result = {
                 message: 'Authentication successful',
                 ...user,
