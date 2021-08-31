@@ -6,6 +6,9 @@ const router = require('express').Router();
 const { handle404, handleError, setupRequest, processResponse } = require('../middlewares/http');
 
 /** Route Handlers */
+const clientRouteHandler = require('./client');
+const vehicleRouteHandler = require('./vehicle');
+const quoteRouteHandler = require('./quote');
 const sampleRouteHandler = require('./sample'),
     invoiceRouteHandler = require('./invoice'),
     staffRouteHandler = require('./staff'),
@@ -13,13 +16,10 @@ const sampleRouteHandler = require('./sample'),
 
 /** Cross Origin Handling */
 router.use(setupRequest);
-router.get('/', (req, res) => {
-    res.status(200).json({
-        message: 'Welcome to Light-AutoCare',
-        payload: null,
-    });
-});
 router.use('/samples', sampleRouteHandler);
+router.use('/client', clientRouteHandler);
+router.use('/vehicle', vehicleRouteHandler);
+router.use('/quote', quoteRouteHandler);
 router.use('/invoice', invoiceRouteHandler);
 router.use('/staff', staffRouteHandler);
 router.use('/personalisedService', personalisedServiceRouteHandler);

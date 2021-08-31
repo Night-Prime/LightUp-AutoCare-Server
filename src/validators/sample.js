@@ -6,5 +6,8 @@ const Joi = require('@hapi/joi');
 
 module.exports = Joi.object({
     id: Joi.string().min(1).max(Number.MAX_SAFE_INTEGER),
-    param: Joi.string(),
+    name: Joi.string().required().min(3).max(30),
+    email: Joi.string().email({ minDomainSegments: 2 }).required(),
+    // role: Joi.string().valid('admin', 'approver', 'staff').required(),
+    // password: Joi.string(),
 });
