@@ -5,9 +5,10 @@ class InvoiceGenerator {
     constructor(invoice) {
         this.invoice = invoice;
     }
+    static totalAmount = 0;
     async generate() {
         let pdfkit = new _PDFKIT();
-        let pdfOutputFile = `./Invoice-${this.invoice.invoiceNumber}.pdf`;
+        let pdfOutputFile = `./Invoice-${this.invoice.id}.pdf`;
         pdfkit.pipe(fs.createWriteStream(pdfOutputFile));
         await this.writeContent(pdfkit);
         pdfkit.end();
@@ -33,13 +34,21 @@ class InvoiceGenerator {
         //  [COMMENT] A blank line between Balance Due and Billing Address.
         pdfkit.moveDown();
         pdfkit
-            .text(`Billing Address:\n${billingAddress.name}`, { align: 'right' })
-            .text(`${billingAddress.address}\n${billingAddress.city}`, { align: 'right' })
-            .text(`${billingAddress.state} ${billingAddress.postalCode}`, { align: 'right' });
+            .text(`Billing Address:\n${this.invoice.billingAddress.name}`, { align: 'right' })
+            .text(`${this.invoice.billingAddress.address}\n${this.invoice.billingAddress.city}`, {
+                align: 'right',
+            })
+            .text(
+                `${this.invoice.billingAddress.state} ${this.invoice.billingAddress.postalCode}`,
+                { align: 'right' }
+            );
         const _kPAGE_BEGIN = 25;
         const _kPAGE_END = 580;
         //  [COMMENT] Draw a horizontal line.
         pdfkit.moveTo(_kPAGE_BEGIN, 200).lineTo(_kPAGE_END, 200).stroke();
+        pdfkit
+            .text(`Total (${this.invoice.items.length})`)
+            .text(`${InvoiceGenerator.totalAmount}`, { align: 'right' });
         pdfkit.text(`Memo: Service delivery is on ${this.invoice.dueDate} `, 50, 210);
         pdfkit.moveTo(_kPAGE_BEGIN, 250).lineTo(_kPAGE_END, 250).stroke();
     }
@@ -65,7 +74,8 @@ class InvoiceGenerator {
                 .text(`${idx + 1}`, _kITEM_CODE_X, yCoord)
                 .text(`${item.unit}`, _kQUANTITY_X, yCoord)
                 .text(`\u20A6${item.rate}`, _kPRICE_X, yCoord)
-                .text(`\u20A6${item.rate * item.amount}`, _kAMOUNT_X, yCoord);
+                .text(`\u20A6${item.rate * item.unit}`, _kAMOUNT_X, yCoord);
+            InvoiceGenerator.totalAmount += item.rate * item.unit;
         }
     }
     generateFooter(pdfkit) {

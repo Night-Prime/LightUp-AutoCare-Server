@@ -60,7 +60,6 @@ const InvoiceSchema = new Schema({
             },
             amount: {
                 type: Number,
-                required: true,
                 min: [1, 'Amount too low'],
             },
         },

@@ -53,7 +53,7 @@ async function doRequest(requestPayload) {
         });
     });
 }
-async function createInvoice() {
+async function createInvoice(payload) {
     let ig = new InvoiceGenerator(payload);
     return await ig.generate();
 }
@@ -67,4 +67,6 @@ module.exports = {
     checkToken,
 
     doRequest,
+
+    createInvoice,
 };

@@ -7,9 +7,9 @@ module.exports = Joi.object({
     items: Joi.array().items(
         Joi.object({
             item: Joi.string().required().min(3).max(30),
-            unit: Joi.string().required().min(1).max(Number.MAX_SAFE_INTEGER),
-            rate: Joi.string().required().min(1).max(Number.MAX_SAFE_INTEGER),
-            unit: Joi.string().required().min(1).max(Number.MAX_SAFE_INTEGER),
+            unit: Joi.number().required().min(1).max(Number.MAX_SAFE_INTEGER),
+            rate: Joi.number().required().min(1).max(Number.MAX_SAFE_INTEGER),
+            unit: Joi.number().required().min(1).max(Number.MAX_SAFE_INTEGER),
         })
     ),
 });
