@@ -1,53 +1,52 @@
 const router = require('express').Router();
 const Controller = require('../controllers/index');
-const sampleSchemaValidator = require('../validators/sample');
+const invoiceSchemaValidator = require('../validators/invoice');
 
 const invoiceController = new Controller('Invoice');
 const InvoiceService = require('../services/invoice/invoice.js');
-const verifyToken = require('../middlewares/verifyToken');
-const { checkAccessRight } = require('../middlewares/checkAccessRight');
+const { checkAccessRight, verifyToken } = require('../middlewares/permission');
 
-const invoiceService = new InvoiceService(invoiceController, sampleSchemaValidator);
+const invoiceService = new InvoiceService(invoiceController, invoiceSchemaValidator);
 
 try {
-    router.use(
-        '/',
-        verifyToken,
-        checkAccessRight,
-        router
-            .post('/', async (request, response, next) => {
-                request.payload = await invoiceService.createRecord(request, next);
-                next();
-            })
-            .get('/', async (request, response, next) => {
-                request.payload = await invoiceService.readRecordsByFilter(request, next);
-                next();
-            })
-            .get('/:id', async (request, response, next) => {
-                request.payload = await invoiceService.readRecordById(request, next);
-                next();
-            })
-            .get('/search/:keys/:keyword', async (request, response, next) => {
+    router
+        .post('/', verifyToken, checkAccessRight, async (request, response, next) => {
+            request.payload = await invoiceService.createRecord(request, next);
+            next();
+        })
+        .get('/', verifyToken, checkAccessRight, async (request, response, next) => {
+            request.payload = await invoiceService.readRecordsByFilter(request, next);
+            next();
+        })
+        .get('/:id', verifyToken, checkAccessRight, async (request, response, next) => {
+            request.payload = await invoiceService.readRecordById(request, next);
+            next();
+        })
+        .get(
+            '/search/:keys/:keyword',
+            verifyToken,
+            checkAccessRight,
+            async (request, response, next) => {
                 request.payload = await invoiceService.readRecordsByWildcard(request, next);
                 next();
-            })
-            .put('/', async (request, response, next) => {
-                request.payload = await invoiceService.updateRecords(request, next);
-                next();
-            })
-            .put('/:id', async (request, response, next) => {
-                request.payload = await invoiceService.updateRecordById(request, next);
-                next();
-            })
-            .delete('/', async (request, response, next) => {
-                request.payload = await invoiceService.deleteRecords(request, next);
-                next();
-            })
-            .delete('/:id', async (request, response, next) => {
-                request.payload = await invoiceService.deleteRecordById(request, next);
-                next();
-            })
-    );
+            }
+        )
+        .put('/', verifyToken, checkAccessRight, async (request, response, next) => {
+            request.payload = await invoiceService.updateRecords(request, next);
+            next();
+        })
+        .put('/:id', verifyToken, checkAccessRight, async (request, response, next) => {
+            request.payload = await invoiceService.updateRecordById(request, next);
+            next();
+        })
+        .delete('/', verifyToken, checkAccessRight, async (request, response, next) => {
+            request.payload = await invoiceService.deleteRecords(request, next);
+            next();
+        })
+        .delete('/:id', verifyToken, checkAccessRight, async (request, response, next) => {
+            request.payload = await invoiceService.deleteRecordById(request, next);
+            next();
+        });
 } catch (e) {
     console.log(`[Route Error] /invoice: ${e.message}`);
 } finally {

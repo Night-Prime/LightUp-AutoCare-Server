@@ -9,6 +9,15 @@ class InvoiceService extends RootService {
         this.serviceName = 'InvoiceService';
     }
 
+    async createInvoicePDF(request, next) {
+        try {
+            const { body } = request;
+            const { error } = this.schemaValidator.validate(body);
+            if (error) throw new Error(error);
+            delete body.id;
+        } catch (error) {}
+    }
+
     async createRecord(request, next) {
         try {
             const { body } = request;
