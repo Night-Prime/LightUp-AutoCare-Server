@@ -69,9 +69,11 @@ class Controller {
         }
     }
 
+    //
     async updateRecords(conditions, data) {
         try {
             const dataToSet = Controller.deleteRecordMetadata(data);
+
             const result = await this.model.updateMany(
                 { ...conditions },
                 {
@@ -79,8 +81,27 @@ class Controller {
                     $currentDate: { updatedOn: true },
                 }
             );
-
             return Controller.jsonize({ ...result, data });
+        } catch (e) {
+            return Controller.processError(e.message);
+        }
+    }
+
+    async updateAndPushRecords(conditions, data, arrayToPush) {
+        try {
+            const dataToSet = Controller.deleteRecordMetadata(data);
+
+            const result = await this.model.updateMany(
+                { ...conditions },
+                {
+                    $set: {
+                        ...dataToSet,
+                    },
+                    $push: { ...arrayToPush },
+                }
+            );
+
+            return Controller.jsonize({ ...result, ...data, ...arrayToPush });
         } catch (e) {
             return Controller.processError(e.message);
         }

@@ -1,6 +1,7 @@
 const RootService = require('../_root');
 const EventEmitter = require('events');
 const { buildQuery, buildWildcardOptions } = require('../../utilities/query');
+const { date } = require('@hapi/joi');
 
 // class QuoteEmitter extends EventEmitter {}
 // const quoteEmitter = new QuoteEmitter();
@@ -21,7 +22,7 @@ class QuoteService extends RootService {
             if (error) throw new Error(error);
 
             delete body.id;
-
+            body['createdBy'] = request.id;
             const result = await this.quoteController.createRecord({ ...body });
             if (result.failed) {
                 throw new Error(result.error);
@@ -112,14 +113,23 @@ class QuoteService extends RootService {
             if (!id) throw new Error('Invalid ID supplied.');
 
             const record = await this.quoteController.readRecords({ id, isActive: true });
-            console.log(record);
-            if (!record[0].isPending === true) {
+
+            if (!record[0].isPending) {
                 throw new Error('This record is not pending');
             }
             if (record[0].isApproved && (request.role !== 'admin' || request.role !== 'approver')) {
                 throw new Error('Requires admin or approval privilege');
             }
-            const result = await this.quoteController.updateRecords({ id }, { ...data });
+
+            let arrayToPush = { quoteHistory: { updatedBy: request.id, updatedOn: new Date() } };
+
+            let conditions = { id };
+
+            const result = await this.quoteController.updateAndPushRecords(
+                conditions,
+                data,
+                arrayToPush
+            );
 
             if (result.failed) {
                 throw new Error(result.error);
