@@ -41,6 +41,14 @@ class StaffService extends RootService {
 
             const [user] = await this.sampleController.readRecords({ email });
             if (user.failed) throw new Error(user.error);
+            if (user.isDeleted) {
+                const error = {
+                    status: 401,
+                    error: 'Requires admin or approver privilege',
+                    payload: null,
+                };
+                throw new Error(error);
+            }
 
             const validPassword = await verifyObject(password, user.password);
             if (!validPassword) throw new Error('Invalid Password');
