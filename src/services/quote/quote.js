@@ -22,7 +22,9 @@ class QuoteService extends RootService {
             if (error) throw new Error(error);
 
             delete body.id;
-            body['createdBy'] = request.id;
+            body['createdById'] = request.name;
+            body['createdByName'] = request.name;
+
             const result = await this.quoteController.createRecord({ ...body });
             if (result.failed) {
                 throw new Error(result.error);
@@ -115,16 +117,23 @@ class QuoteService extends RootService {
             const record = await this.quoteController.readRecords({ id, isActive: true });
 
             if (!record[0].isPending) {
-                throw new Error('This record is not pending');
+                throw new Error('This record is not processed for invoice');
             }
+
             if (record[0].isApproved && (request.role !== 'admin' || request.role !== 'approver')) {
-                throw new Error('Requires admin or approval privilege');
+                throw new Error('Requires admin or approver privilege');
             }
 
             let arrayToPush = {
                 items: { ...data },
-                quoteHistory: { updatedBy: request.id, updatedOn: new Date() },
+                quoteHistory: {
+                    updatedById: request.id,
+                    updatedByName: request.name,
+                    updatedOn: new Date(),
+                },
             };
+            console.log('******************request');
+            console.log(request.name);
 
             let conditions = { id };
 

@@ -10,11 +10,11 @@ const clientService = new ClientService(clientController, clientSchemaValidator)
 
 try {
     router
-        .post('/', verifyToken, checkAdminAccess, async (request, response, next) => {
+        .post('/', verifyToken, async (request, response, next) => {
             request.payload = await clientService.createRecord(request, next);
             next();
         })
-        .get('/', verifyToken, checkAdminAccess, async (request, response, next) => {
+        .get('/', verifyToken, async (request, response, next) => {
             request.payload = await clientService.readRecordsByFilter(request, next);
             next();
         })
@@ -26,19 +26,19 @@ try {
             request.payload = await clientService.readRecordsByWildcard(request, next);
             next();
         })
-        .put('/', verifyToken, checkAdminAccess, async (request, response, next) => {
+        .put('/', verifyToken, async (request, response, next) => {
             request.payload = await clientService.updateRecords(request, next);
             next();
         })
-        .put('/:id', verifyToken, checkAdminAccess, async (request, response, next) => {
+        .put('/:id', verifyToken, async (request, response, next) => {
             request.payload = await clientService.updateRecordById(request, next);
             next();
         })
-        .delete('/', verifyToken, checkAdminAccess, async (request, response, next) => {
+        .delete('/', verifyToken, async (request, response, next) => {
             request.payload = await clientService.deleteRecords(request, next);
             next();
         })
-        .delete('/:id', verifyToken, checkAdminAccess, async (request, response, next) => {
+        .delete('/:id', verifyToken, async (request, response, next) => {
             request.payload = await clientService.deleteRecordById(request, next);
             next();
         });
