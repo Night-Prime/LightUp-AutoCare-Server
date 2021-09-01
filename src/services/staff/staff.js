@@ -137,7 +137,6 @@ class StaffService extends RootService {
         try {
             const { id } = request.params;
             const { data, role } = request.body;
-            const token = request.token;
 
             if (!id) throw new Error('Invalid ID supplied.');
 
