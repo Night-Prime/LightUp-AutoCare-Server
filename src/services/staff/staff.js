@@ -1,6 +1,5 @@
 const RootService = require('../_root');
 const { buildQuery, buildWildcardOptions } = require('../../utilities/query');
-const jwt = require('jsonwebtoken');
 const { generateToken, hashObject, verifyObject } = require('../../utilities/packages');
 
 class StaffService extends RootService {
