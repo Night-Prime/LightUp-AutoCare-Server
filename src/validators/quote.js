@@ -1,5 +1,4 @@
 const Joi = require('@hapi/joi');
-const { required } = require('./client');
 
 module.exports = Joi.object({
     id: Joi.number().min(1).max(Number.MAX_SAFE_INTEGER),

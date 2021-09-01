@@ -21,10 +21,8 @@ class InvoiceGenerator {
     }
 
     generateHeaders(pdfkit) {
-        let billingAddress = this.invoice.addresses.billing;
-
         pdfkit
-            .image('./LightCareAuto.jpg', 25, 25, { width: 150 })
+            .image('./src/utilities/LightCareAuto.jpg', 25, 25, { width: 150 })
             .fillColor('#000')
             .fontSize(20)
             .text('INVOICE', 400, 25, { align: 'right' })
@@ -46,9 +44,6 @@ class InvoiceGenerator {
         const _kPAGE_END = 580;
         //  [COMMENT] Draw a horizontal line.
         pdfkit.moveTo(_kPAGE_BEGIN, 200).lineTo(_kPAGE_END, 200).stroke();
-        pdfkit
-            .text(`Total (${this.invoice.items.length})`)
-            .text(`${InvoiceGenerator.totalAmount}`, { align: 'right' });
         pdfkit.text(`Memo: Service delivery is on ${this.invoice.dueDate} `, 50, 210);
         pdfkit.moveTo(_kPAGE_BEGIN, 250).lineTo(_kPAGE_END, 250).stroke();
     }
@@ -65,18 +60,37 @@ class InvoiceGenerator {
             .text('Unit', _kQUANTITY_X, _kTABLE_TOP_Y, { bold: true, underline: true })
             .text('Rate', _kPRICE_X, _kTABLE_TOP_Y, { bold: true, underline: true })
             .text('Amount', _kAMOUNT_X, _kTABLE_TOP_Y, { bold: true, underline: true });
+
         let items = this.invoice.items;
         for (let idx = 0; idx < items.length; idx++) {
             let item = items[idx];
             let yCoord = _kTABLE_TOP_Y + 25 + idx * 25;
             pdfkit
                 .fontSize(10)
-                .text(`${idx + 1}`, _kITEM_CODE_X, yCoord)
+                .text(`(${idx + 1})`, _kITEM_CODE_X, yCoord)
                 .text(`${item.unit}`, _kQUANTITY_X, yCoord)
-                .text(`\u20A6${item.rate}`, _kPRICE_X, yCoord)
-                .text(`\u20A6${item.rate * item.unit}`, _kAMOUNT_X, yCoord);
+                .text(`${item.rate}`, _kPRICE_X, yCoord)
+                .text(`${item.rate * item.unit}`, _kAMOUNT_X, yCoord);
             InvoiceGenerator.totalAmount += item.rate * item.unit;
         }
+        pdfkit
+            .fontSize(10)
+            .text(
+                `Total (${this.invoice.items.length})`,
+                _kITEM_CODE_X,
+                _kTABLE_TOP_Y + 25 + items.length * 25,
+                {
+                    bold: true,
+                }
+            )
+            .text(
+                `${InvoiceGenerator.totalAmount}`,
+                _kAMOUNT_X,
+                _kTABLE_TOP_Y + 25 + items.length * 25,
+                {
+                    bold: true,
+                }
+            );
     }
     generateFooter(pdfkit) {
         pdfkit
