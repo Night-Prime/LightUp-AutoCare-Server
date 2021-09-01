@@ -2,6 +2,8 @@ const RootService = require('../_root');
 const { buildQuery, buildWildcardOptions } = require('../../utilities/query');
 const { createInvoice } = require('../../utilities/packages');
 const sendMailToClient = require('../../utilities/nodemailer');
+const InvoiceGenerator = require('../../utilities/invoiceGenerator');
+const generatePdfEmitter = require('../../events/generateInvoice');
 
 class InvoiceService extends RootService {
     constructor(sampleController, schemaValidator) {
@@ -28,19 +30,11 @@ class InvoiceService extends RootService {
 
             delete body.id;
 
-            const [result] = await this.sampleController.createRecord({ ...body });
-            console.log(result);
+            const result = await this.sampleController.createRecord({ ...body });
             if (result.failed) {
                 throw new Error(result.error);
             } else {
-                createInvoice(result)
-                    .then(async () => {
-                        await sendMailToClient(result).then(() => {});
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                        throw new Error(error);
-                    });
+                generatePdfEmitter.emit('create', result);
                 return this.processSingleRead(result);
             }
         } catch (e) {

@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const Controller = require('../controllers/index');
 const clientSchemaValidator = require('../validators/client');
-const { checkAccessRight, verifyToken } = require('../middlewares/permission');
+const { checkAccessRight, verifyToken, checkAdminAccess } = require('../middlewares/permission');
 
 const clientController = new Controller('Client');
 const ClientService = require('../services/client/client');
