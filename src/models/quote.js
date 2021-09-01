@@ -51,13 +51,17 @@ const QuoteSchema = new Schema({
         type: Boolean,
         default: false,
     },
-    createdBy: {
+    createdById: {
+        type: String,
+        required: true,
+    },
+    createdByName: {
         type: String,
         required: true,
     },
     quoteHistory: [
         {
-            updatedBy: {
+            updatedById: {
                 type: String,
             },
 
