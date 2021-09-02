@@ -11,8 +11,12 @@ const staffService = new StaffService(staffController, staffSchemaValidator);
 
 try {
     router
-        .post('/signup', async (request, response, next) => {
+        .post('/signup', verifyToken, checkAdminAccess, async (request, response, next) => {
             request.payload = await staffService.createRecord(request, next);
+            next();
+        })
+        .put('/createPassword', async (request, response, next) => {
+            request.payload = await staffService.createPassword(request, next);
             next();
         })
         .post('/login', async (request, response, next) => {

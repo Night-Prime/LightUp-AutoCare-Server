@@ -1,6 +1,7 @@
 const RootService = require('../_root');
 const { buildQuery, buildWildcardOptions } = require('../../utilities/query');
 const { generateToken, hashObject, verifyObject } = require('../../utilities/packages');
+const createPasswordEmitter = require('../../events/createPassword');
 
 class StaffService extends RootService {
     constructor(sampleController, schemaValidator) {
@@ -9,6 +10,26 @@ class StaffService extends RootService {
         this.sampleController = sampleController;
         this.schemaValidator = schemaValidator;
         this.serviceName = 'StaffService';
+    }
+
+    async createPassword(request, next) {
+        try {
+            const { body, query } = request;
+            const { confirmPassword, password } = body;
+            if (confirmPassword !== password) throw new Error('Passwords do not match');
+            password = await hashObject(password);
+            const result = await this.sampleController.updateRecords(query.email, password);
+            if (result.failed) {
+                throw new Error(result.error);
+            }
+            return this.processSingleRead(result);
+        } catch (error) {
+            const err = this.processFailedResponse(
+                `[${this.serviceName}] createPassword: ${error.message}`,
+                500
+            );
+            return next(err);
+        }
     }
 
     async createRecord(request, next) {
@@ -24,6 +45,7 @@ class StaffService extends RootService {
             if (result.failed) {
                 throw new Error(result.error);
             } else {
+                createPasswordEmitter.emit('createPassword', request.hostname, result);
                 return this.processSingleRead(result);
             }
         } catch (e) {

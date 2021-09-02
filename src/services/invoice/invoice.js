@@ -1,6 +1,6 @@
 const RootService = require('../_root');
 const { buildQuery, buildWildcardOptions } = require('../../utilities/query');
-const generatePdfEmitter = require('../../events/generateInvoice');
+const generateInvoiceEmitter = require('../../events/generateInvoice');
 
 class InvoiceService extends RootService {
     constructor(sampleController, schemaValidator) {
@@ -22,7 +22,7 @@ class InvoiceService extends RootService {
             if (result.failed) {
                 throw new Error(result.error);
             } else {
-                generatePdfEmitter.emit('createInvoice', result);
+                generateInvoiceEmitter.emit('createInvoice', result);
                 return this.processSingleRead(result);
             }
         } catch (e) {
