@@ -9,7 +9,7 @@ createPasswordEmitter.on('createPassword', async function (hostname, user) {
         from: process.env.email, // sender address
         to: user.email,
         subject: `Update profile by creating password`,
-        text: `Hi ${user.name} \n. Update your password for your account by clicking this link below.\n ${hostname}/createPassword?email=${user.email} `,
+        text: `Hi ${user.name}. \n Update your password for your account by clicking this link below.\n ${hostname}/createPassword?email=${user.email} `,
         html: '<b>LightUp AutoCare</b>',
     };
     const transportPayload = {

@@ -35,6 +35,7 @@ class StaffService extends RootService {
     async createRecord(request, next) {
         try {
             const { body } = request;
+            console.log(request.hostname);
             const { error } = this.schemaValidator.validate(body);
             if (error) throw new Error(error);
 
