@@ -29,7 +29,7 @@ async function sendMailToClient(quote) {
                 },
             ],
         })
-        .then(() => {
+        .then(async () => {
             console.log('this should be success');
             await fs.unlink(filePath);
             console.log(`successfully deleted ${filePath}`);
