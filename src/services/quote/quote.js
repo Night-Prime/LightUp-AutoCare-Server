@@ -2,9 +2,7 @@ const RootService = require('../_root');
 const EventEmitter = require('events');
 const { buildQuery, buildWildcardOptions } = require('../../utilities/query');
 const { date } = require('@hapi/joi');
-
-// class QuoteEmitter extends EventEmitter {}
-// const quoteEmitter = new QuoteEmitter();
+const generatePdfEmitter = require('../../events/generateQuote');
 
 class QuoteService extends RootService {
     constructor(quoteController, schemaValidator) {
@@ -22,13 +20,14 @@ class QuoteService extends RootService {
             if (error) throw new Error(error);
 
             delete body.id;
-            body['createdById'] = request.name;
+            body['createdById'] = request.id;
             body['createdByName'] = request.name;
 
             const result = await this.quoteController.createRecord({ ...body });
             if (result.failed) {
                 throw new Error(result.error);
             } else {
+                generatePdfEmitter.emit('createQuote', result);
                 return this.processSingleRead(result);
             }
         } catch (e) {
@@ -117,7 +116,7 @@ class QuoteService extends RootService {
             const record = await this.quoteController.readRecords({ id, isActive: true });
 
             if (!record[0].isPending) {
-                throw new Error('This record is not processed for invoice');
+                throw new Error('This record is being processed to generate invoice');
             }
 
             if (record[0].isApproved && (request.role !== 'admin' || request.role !== 'approver')) {
@@ -132,8 +131,6 @@ class QuoteService extends RootService {
                     updatedOn: new Date(),
                 },
             };
-            console.log('******************request');
-            console.log(request.name);
 
             let conditions = { id };
 
@@ -145,6 +142,7 @@ class QuoteService extends RootService {
             if (result.failed) {
                 throw new Error(result.error);
             } else {
+                generatePdfEmitter.emit('createQoute', result);
                 return this.processUpdateResult(result);
             }
         } catch (e) {
