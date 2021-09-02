@@ -1,11 +1,11 @@
 const EventEmitter = require('events');
 const InvoiceGenerator = require('../utilities/invoiceGenerator');
-const sendMailToClient = require('../utilities/nodemailer');
+const sendMailToClient = require('../utilities/invoiceMailer');
 
 class GenerateInvoiceEmitter extends EventEmitter {}
 
 const generateInvoiceEmitter = new GenerateInvoiceEmitter();
-generateInvoiceEmitter.on('create', function (invoice) {
+generateInvoiceEmitter.on('createInvoice', function (invoice) {
     let ig = new InvoiceGenerator(invoice);
 
     void (async function main() {
@@ -13,7 +13,7 @@ generateInvoiceEmitter.on('create', function (invoice) {
     })();
 });
 
-generateInvoiceEmitter.on('create', async function (invoice) {
+generateInvoiceEmitter.on('createInvoice', async function (invoice) {
     await sendMailToClient(invoice).catch((error) => {
         console.error(error);
     });

@@ -1,8 +1,5 @@
 const RootService = require('../_root');
 const { buildQuery, buildWildcardOptions } = require('../../utilities/query');
-const { createInvoice } = require('../../utilities/packages');
-const sendMailToClient = require('../../utilities/nodemailer');
-const InvoiceGenerator = require('../../utilities/invoiceGenerator');
 const generatePdfEmitter = require('../../events/generateInvoice');
 
 class InvoiceService extends RootService {
@@ -25,7 +22,7 @@ class InvoiceService extends RootService {
             if (result.failed) {
                 throw new Error(result.error);
             } else {
-                generatePdfEmitter.emit('create', result);
+                generatePdfEmitter.emit('createInvoice', result);
                 return this.processSingleRead(result);
             }
         } catch (e) {
