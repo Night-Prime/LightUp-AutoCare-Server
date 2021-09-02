@@ -40,6 +40,7 @@ const QuoteSchema = new Schema({
             },
         },
     ],
+
     // isPending is true until the client accepts the quote
     isPending: {
         type: Boolean,
@@ -71,6 +72,30 @@ const QuoteSchema = new Schema({
             },
         },
     ],
+
+    billingAddress: {
+        name: {
+            type: String,
+            default: 'ATB TECHSOFT',
+        },
+        address: {
+            type: String,
+            default: '8 CMD ROAD',
+        },
+        city: {
+            type: String,
+            default: 'IKOSI KETU ',
+        },
+        postalCode: {
+            type: Number,
+            default: 100248,
+        },
+        state: {
+            type: String,
+            default: 'LAGOS',
+        },
+    },
+
     // Model Required fields
     isActive: {
         type: Boolean,
