@@ -4,12 +4,12 @@ const { sendMail } = require('../utilities/packages');
 class CreatePasswordEmitter extends EventEmitter {}
 
 const createPasswordEmitter = new CreatePasswordEmitter();
-createPasswordEmitter.on('createPassword', async function (hostname, user) {
+createPasswordEmitter.on('createPassword', async function (request, user) {
     const emailContent = {
         from: process.env.email, // sender address
         to: user.email,
         subject: `Update profile by creating password`,
-        text: `Hi ${user.name}. \n Update your password for your account by clicking this link below.\n ${hostname}/createPassword?email=${user.email} `,
+        text: `Hi ${user.name}. \n Update your password for your account by clicking this link below.\n https://${request.hostname}${request.baseUrl}/createPassword?email=${user.email} `,
         html: '<b>LightUp AutoCare</b>',
     };
     const transportPayload = {

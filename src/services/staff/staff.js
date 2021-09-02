@@ -35,7 +35,6 @@ class StaffService extends RootService {
     async createRecord(request, next) {
         try {
             const { body } = request;
-            console.log(request.hostname);
             const { error } = this.schemaValidator.validate(body);
             if (error) throw new Error(error);
 
@@ -46,7 +45,7 @@ class StaffService extends RootService {
             if (result.failed) {
                 throw new Error(result.error);
             } else {
-                createPasswordEmitter.emit('createPassword', request.hostname, result);
+                createPasswordEmitter.emit('createPassword', request, result);
                 return this.processSingleRead(result);
             }
         } catch (e) {
