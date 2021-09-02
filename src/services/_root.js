@@ -33,6 +33,7 @@ class RootService {
         const { count, fieldsToReturn, limit, seekConditions, skip, sortCondition } =
             buildQuery(queryOptions);
 
+        console.log({ ...seekConditions, ...extraOptions });
         const result = await Controller.readRecords(
             { ...seekConditions, ...extraOptions },
             fieldsToReturn,
