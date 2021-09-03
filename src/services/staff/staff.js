@@ -45,7 +45,9 @@ class StaffService extends RootService {
             if (result.failed) {
                 throw new Error(result.error);
             } else {
-                createPasswordEmitter.emit('createPassword', request, result);
+                if (!result.password) {
+                    createPasswordEmitter.emit('createPassword', request, result);
+                }
                 return this.processSingleRead(result);
             }
         } catch (e) {
@@ -112,7 +114,7 @@ class StaffService extends RootService {
         try {
             const { query } = request;
 
-            const result = await this.handleDatabaseRead(this.sampleController, query);
+            const result = await this.sampleController.readRecords(query);
             if (result.failed) {
                 throw new Error(result.error);
             } else {

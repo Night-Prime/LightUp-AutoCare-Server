@@ -58,7 +58,7 @@ class InvoiceService extends RootService {
         try {
             const { query } = request;
 
-            const result = await this.handleDatabaseRead(this.sampleController, query);
+            const result = await this.sampleController.readRecords(query);
             if (result.failed) {
                 throw new Error(result.error);
             } else {
