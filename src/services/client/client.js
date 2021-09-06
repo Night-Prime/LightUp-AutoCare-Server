@@ -57,7 +57,7 @@ class ClientService extends RootService {
         try {
             const { query } = request;
 
-            const result = await this.handleDatabaseRead(this.clientController, query);
+            const result = await this.clientController.readRecords(query);
             if (result.failed) {
                 throw new Error(result.error);
             } else {
