@@ -15,7 +15,7 @@ class StaffService extends RootService {
     async createPassword(request, next) {
         try {
             const { body, query } = request;
-            const { confirmPassword, password } = body;
+            let { confirmPassword, password } = body;
             if (confirmPassword !== password) throw new Error('Passwords do not match');
             password = await hashObject(password);
             const result = await this.sampleController.updateRecords(query.email, password);
