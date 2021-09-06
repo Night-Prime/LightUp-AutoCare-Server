@@ -18,11 +18,14 @@ class StaffService extends RootService {
             let { confirmPassword, password } = body;
             if (confirmPassword !== password) throw new Error('Passwords do not match');
             password = await hashObject(password);
-            const result = await this.sampleController.updateRecords(query.email, password);
+            const result = await this.sampleController.updateStaffPassword(query.email, {
+                password: password,
+            });
+            console.log('create password result', result);
             if (result.failed) {
                 throw new Error(result.error);
             }
-            return this.processSingleRead(result);
+            return this.processUpdateResult(result);
         } catch (error) {
             const err = this.processFailedResponse(
                 `[${this.serviceName}] createPassword: ${error.message}`,
@@ -159,6 +162,7 @@ class StaffService extends RootService {
 
     async updateRecordById(request, next) {
         try {
+            console.log('got into updateRecordByid');
             const { id } = request.params;
             const { data, role } = request.body;
 

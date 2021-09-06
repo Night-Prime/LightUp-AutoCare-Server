@@ -15,7 +15,11 @@ try {
             request.payload = await staffService.createRecord(request, next);
             next();
         })
-        .put('/createPassword', async (request, response, next) => {
+        .put('/:id', verifyToken, checkAdminAccess, async (request, response, next) => {
+            request.payload = await staffService.updateRecordById(request, next);
+            next();
+        })
+        .put('/password/create', async (request, response, next) => {
             request.payload = await staffService.createPassword(request, next);
             next();
         })
@@ -44,10 +48,7 @@ try {
             request.payload = await staffService.updateRecords(request, next);
             next();
         })
-        .put('/:id', verifyToken, checkAdminAccess, async (request, response, next) => {
-            request.payload = await staffService.updateRecordById(request, next);
-            next();
-        })
+
         .delete('/', verifyToken, checkAdminAccess, async (request, response, next) => {
             request.payload = await staffService.deleteRecords(request, next);
             next();
