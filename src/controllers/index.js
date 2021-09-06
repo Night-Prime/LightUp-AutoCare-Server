@@ -58,6 +58,7 @@ class Controller {
                     .sort(sortOptions);
                 return { count: result };
             }
+            conditions[isActive] = true;
             result = await this.model
                 .find({ ...conditions }, fieldsToReturn)
                 .skip(skip)
