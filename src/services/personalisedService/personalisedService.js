@@ -62,8 +62,8 @@ class PersonalisedService extends RootService {
 
             let result;
             query
-                ? (result = await this.clientController.readRecords({ ...query, isActive: true }))
-                : (result = await this.clientController.readRecords({ isActive: true }));
+                ? (result = await this.sampleController.readRecords({ ...query, isActive: true }))
+                : (result = await this.sampleController.readRecords({ isActive: true }));
             if (result.failed) {
                 throw new Error(result.error);
             } else {
