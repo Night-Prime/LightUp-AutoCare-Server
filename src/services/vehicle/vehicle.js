@@ -57,7 +57,10 @@ class VehicleService extends RootService {
         try {
             const { query } = request;
 
-            const result = await this.handleDatabaseRead(this.vehicleController, query);
+            let result;
+            query
+                ? (result = await this.vehicleController.readRecords({ ...query, isActive: true }))
+                : (result = await this.vehicleController.readRecords({ isActive: true }));
             if (result.failed) {
                 throw new Error(result.error);
             } else {

@@ -63,7 +63,7 @@ class QuoteService extends RootService {
         try {
             const { query } = request;
 
-            const result = await this.handleDatabaseRead(this.quoteController, query);
+            const result = await this.quoteController.readRecords(query);
             if (result.failed) {
                 throw new Error(result.error);
             } else {
