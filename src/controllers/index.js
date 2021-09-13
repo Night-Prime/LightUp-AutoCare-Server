@@ -87,6 +87,19 @@ class Controller {
         }
     }
 
+    async updateStaffPassword(email, data) {
+        try {
+            const dataToSet = Controller.deleteRecordMetadata(data);
+            const result = await this.model.updateOne(
+                { email: email },
+                { ...dataToSet, $currentDate: { updatedOn: true } }
+            );
+            return Controller.jsonize({ ...result, data });
+        } catch (e) {
+            return Controller.processError(e.message);
+        }
+    }
+
     async updateAndPushRecords(conditions, data, arrayToPush) {
         try {
             const dataToSet = Controller.deleteRecordMetadata(data);

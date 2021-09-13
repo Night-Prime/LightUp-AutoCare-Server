@@ -11,8 +11,16 @@ const staffService = new StaffService(staffController, staffSchemaValidator);
 
 try {
     router
-        .post('/signup', async (request, response, next) => {
+        .post('/signup', verifyToken, checkAdminAccess, async (request, response, next) => {
             request.payload = await staffService.createRecord(request, next);
+            next();
+        })
+        .put('/:id', verifyToken, checkAdminAccess, async (request, response, next) => {
+            request.payload = await staffService.updateRecordById(request, next);
+            next();
+        })
+        .put('/password/create', async (request, response, next) => {
+            request.payload = await staffService.createPassword(request, next);
             next();
         })
         .post('/login', async (request, response, next) => {
@@ -40,10 +48,7 @@ try {
             request.payload = await staffService.updateRecords(request, next);
             next();
         })
-        .put('/:id', verifyToken, checkAdminAccess, async (request, response, next) => {
-            request.payload = await staffService.updateRecordById(request, next);
-            next();
-        })
+
         .delete('/', verifyToken, checkAdminAccess, async (request, response, next) => {
             request.payload = await staffService.deleteRecords(request, next);
             next();

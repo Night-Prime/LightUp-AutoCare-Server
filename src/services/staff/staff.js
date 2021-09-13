@@ -1,6 +1,7 @@
 const RootService = require('../_root');
 const { buildQuery, buildWildcardOptions } = require('../../utilities/query');
 const { generateToken, hashObject, verifyObject } = require('../../utilities/packages');
+const createPasswordEmitter = require('../../events/createPassword');
 
 class StaffService extends RootService {
     constructor(sampleController, schemaValidator) {
@@ -9,6 +10,29 @@ class StaffService extends RootService {
         this.sampleController = sampleController;
         this.schemaValidator = schemaValidator;
         this.serviceName = 'StaffService';
+    }
+
+    async createPassword(request, next) {
+        try {
+            const { body, query } = request;
+            let { confirmPassword, password } = body;
+            if (confirmPassword !== password) throw new Error('Passwords do not match');
+            password = await hashObject(password);
+            const result = await this.sampleController.updateStaffPassword(query.email, {
+                password: password,
+            });
+            console.log('create password result', result);
+            if (result.failed) {
+                throw new Error(result.error);
+            }
+            return this.processUpdateResult(result);
+        } catch (error) {
+            const err = this.processFailedResponse(
+                `[${this.serviceName}] createPassword: ${error.message}`,
+                500
+            );
+            return next(err);
+        }
     }
 
     async createRecord(request, next) {
@@ -24,6 +48,9 @@ class StaffService extends RootService {
             if (result.failed) {
                 throw new Error(result.error);
             } else {
+                if (!result.password) {
+                    createPasswordEmitter.emit('createPassword', request, result);
+                }
                 return this.processSingleRead(result);
             }
         } catch (e) {
@@ -89,8 +116,10 @@ class StaffService extends RootService {
     async readRecordsByFilter(request, next) {
         try {
             const { query } = request;
-
-            const result = await this.handleDatabaseRead(this.sampleController, query);
+            let result;
+            query
+                ? (result = await this.sampleController.readRecords({ ...query, isActive: true }))
+                : (result = await this.sampleController.readRecords({ isActive: true }));
             if (result.failed) {
                 throw new Error(result.error);
             } else {
@@ -135,6 +164,7 @@ class StaffService extends RootService {
 
     async updateRecordById(request, next) {
         try {
+            console.log('got into updateRecordByid');
             const { id } = request.params;
             const { data, role } = request.body;
 

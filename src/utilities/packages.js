@@ -14,7 +14,7 @@ const verifyJWT = promisify(jwt.verify);
 
 const _REQUEST = require('request');
 
-const InvoiceGenerator = require('../utilities/invoiceGenerator');
+const nodemailer = require('nodemailer');
 
 async function hashObject(object) {
     const salt = await bcrypt.genSalt(Number(SALT));
@@ -53,10 +53,13 @@ async function doRequest(requestPayload) {
         });
     });
 }
-async function createInvoice(payload) {
-    let ig = new InvoiceGenerator(payload);
-    return await ig.generate();
+
+async function sendMail(transporterPayload, emailContent) {
+    let transporter = nodemailer.createTransport(transporterPayload);
+    const result = await transporter.sendMail(emailContent);
+    return result;
 }
+
 module.exports = {
     hashObject,
 
@@ -68,5 +71,5 @@ module.exports = {
 
     doRequest,
 
-    createInvoice,
+    sendMail,
 };
