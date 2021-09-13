@@ -13,16 +13,23 @@ class InvoiceService extends RootService {
     async createRecord(request, next) {
         try {
             const { body } = request;
+            const { clientId } = body;
             const { error } = this.schemaValidator.validate(body);
             if (error) throw new Error(error);
 
             delete body.id;
 
             const result = await this.sampleController.createRecord({ ...body });
+            const clientDetails = await this.sampleController.readRecords({
+                clientId,
+                isActive: true,
+            });
+            const { clientEmail } = clientDetails;
+            console.log(clientEmail);
             if (result.failed) {
                 throw new Error(result.error);
             } else {
-                generateInvoiceEmitter.emit('createInvoice', result);
+                generateInvoiceEmitter.emit('createInvoice', result, clientEmail);
                 return this.processSingleRead(result);
             }
         } catch (e) {
@@ -104,11 +111,13 @@ class InvoiceService extends RootService {
     async updateRecordById(request, next) {
         try {
             const { id } = request.params;
-            const data = request.body;
+            const { body } = request;
 
             if (!id) throw new Error('Invalid ID supplied.');
+            if (Object.keys(body).length === 0)
+                throw new Error('Please specify a field/property to be updated');
 
-            const result = await this.sampleController.updateRecords({ id }, { ...data });
+            const result = await this.sampleController.updateRecords({ id }, { ...body });
             if (result.failed) {
                 throw new Error(result.error);
             } else {

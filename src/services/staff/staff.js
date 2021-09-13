@@ -164,11 +164,12 @@ class StaffService extends RootService {
 
     async updateRecordById(request, next) {
         try {
-            console.log('got into updateRecordByid');
             const { id } = request.params;
-            const { data, role } = request.body;
+            const data = request.body;
 
             if (!id) throw new Error('Invalid ID supplied.');
+            if (Object.keys(data).length === 0)
+                throw new Error('Please specify a field/property to be updated');
 
             const result = await this.sampleController.updateRecords({ id }, { ...data });
             if (result.failed) {
