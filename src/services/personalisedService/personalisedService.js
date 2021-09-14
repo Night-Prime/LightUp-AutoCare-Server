@@ -112,7 +112,8 @@ class PersonalisedService extends RootService {
             const data = request.body;
 
             if (!id) throw new Error('Invalid ID supplied.');
-            console.log(id);
+            if (Object.keys(data).length === 0)
+                throw new Error('Please specify a field/property to be updated');
             const result = await this.sampleController.updateRecords({ id }, { ...data });
             if (result.failed) {
                 throw new Error(result.error);

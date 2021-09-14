@@ -2,7 +2,8 @@ require('dotenv').config();
 const fs = require('fs/promises');
 const { sendMail } = require('../utilities/packages');
 
-async function sendMailToClient(invoice) {
+async function sendMailToClient(invoice, clientEmail) {
+    const filePath = `./Invoice-${this.invoice.id}.pdf`;
     const transportPayload = {
         host: 'smtp.mailtrap.io',
         port: 2525,
@@ -14,7 +15,7 @@ async function sendMailToClient(invoice) {
 
     const emailContent = {
         from: process.env.email, // sender address
-        to: process.env.email,
+        to: clientEmail,
         subject: `Invoice for ${invoice.model}`,
         text: 'We care about your safety',
         html: '<b>LightUp AutoCare</b>',
