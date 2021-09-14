@@ -88,11 +88,11 @@ describe('Tests Query utility', () => {
     it('returns correct data', () => {
         const keys = [
             'count',
-            'fields_to_return',
+            'fieldsToReturn',
             'limit',
-            'seek_conditions',
+            'seekConditions',
             'skip',
-            'sort_condition',
+            'sortCondition',
         ];
 
         const options = {
@@ -105,7 +105,6 @@ describe('Tests Query utility', () => {
             page: 0,
             population: 100,
         };
-        console.log(util.buildQuery(options));
-        expect(util.buildQuery(options)).to.have.keys(...keys);
+        expect(util.buildQuery(options)).to.have.keys(keys);
     });
 });

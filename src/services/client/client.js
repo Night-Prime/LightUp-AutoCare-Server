@@ -109,6 +109,8 @@ class ClientService extends RootService {
             const data = request.body;
 
             if (!id) throw new Error('Invalid ID supplied.');
+            if (Object.keys(data).length === 0)
+                throw new Error('Please specify a field/property to be updated');
 
             const result = await this.clientController.updateRecords({ id }, { ...data });
             if (result.failed) {
