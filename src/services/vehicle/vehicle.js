@@ -3,7 +3,6 @@ const { buildQuery, buildWildcardOptions } = require('../../utilities/query');
 
 class VehicleService extends RootService {
     constructor(vehicleController, vehicleSchemaValidator) {
-        /** */
         super();
         this.vehicleController = vehicleController;
         this.schemaValidator = vehicleSchemaValidator;
@@ -36,9 +35,12 @@ class VehicleService extends RootService {
     async readRecordById(request, next) {
         try {
             const { id } = request.params;
+            console.log('ID goes here');
+            console.log(id);
             if (!id) throw new Error('Invalid ID supplied.');
-
-            const result = await this.vehicleController.readRecords({ id, isActive: true });
+            const result = await this.vehicleController.populateVirtually({ id: parseInt(id) });
+            console.log(result);
+            // const result = await this.vehicleController.readRecords({ id, isActive: true });
             if (result.failed) {
                 throw new Error(result.error);
             } else {
@@ -56,11 +58,21 @@ class VehicleService extends RootService {
     async readRecordsByFilter(request, next) {
         try {
             const { query } = request;
+            console.log('i got here');
+            console.log('query here');
+            console.log(query);
+            //let popl = await this.vehicleController.populateVirtually({});
 
-            let result;
-            query
-                ? (result = await this.vehicleController.readRecords({ ...query, isActive: true }))
-                : (result = await this.vehicleController.readRecords({ isActive: true }));
+            const { id, clientId } = query;
+
+            if (id) {
+                query['id'] = parseInt(id);
+            }
+
+            if (clientId) {
+                query['clientId'] = parseInt(clientId);
+            }
+            let result = await this.vehicleController.populateVirtually({ ...query });
             if (result.failed) {
                 throw new Error(result.error);
             } else {

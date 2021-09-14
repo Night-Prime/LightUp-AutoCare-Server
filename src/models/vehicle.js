@@ -48,4 +48,12 @@ const VehicleSchema = new Schema({
     },
 });
 
+VehicleSchema.virtual('clientNames', {
+    ref: 'Client',
+    localField: 'clientId',
+    foreignField: 'id',
+    justOne: true,
+    options: { sort: { name: -1 }, limit: 5 },
+});
+
 model('Vehicle', VehicleSchema);

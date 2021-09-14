@@ -13,6 +13,7 @@ class ClientService extends RootService {
     async createRecord(request, next) {
         try {
             const { body } = request;
+            if (!body) throw new Error('Specify Content to create');
             const { error } = this.schemaValidator.validate(body);
             if (error) throw new Error(error);
 
