@@ -136,6 +136,38 @@ class Controller {
             return Controller.processError(e.message);
         }
     }
-}
 
+    async populateVirtually(id) {
+        try {
+            let a = await this.model.aggregate([
+                {
+                    $match: {
+                        ...id,
+                        isActive: true,
+                    },
+                },
+
+                {
+                    $lookup: {
+                        from: 'clients',
+                        localField: 'clientId',
+                        foreignField: 'id',
+                        as: 'client',
+                    },
+                },
+            ]);
+
+            return a;
+        } catch (e) {
+            console.log(e);
+            return Controller.processError(e.message);
+        }
+    }
+}
+/**
+ * populate('clientNames')
+                .exec(function (err, result) {
+                    console.log('result', result);
+                });
+ */
 module.exports = Controller;
