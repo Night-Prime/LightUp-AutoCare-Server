@@ -8,7 +8,7 @@ module.exports = Joi.object({
         Joi.object({
             item: Joi.string(),
             unit: Joi.number().required(),
-            rate: Joi.number().min(1),
+            rate: Joi.number(),
             amount: Joi.number().required().min(1),
         })
     ),
