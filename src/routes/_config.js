@@ -17,12 +17,12 @@ const sampleRouteHandler = require('./sample'),
 /** Cross Origin Handling */
 router.use(setupRequest);
 router.use('/samples', sampleRouteHandler);
-router.use('/client', clientRouteHandler);
-router.use('/vehicle', vehicleRouteHandler);
-router.use('/quote', quoteRouteHandler);
-router.use('/invoice', invoiceRouteHandler);
-router.use('/staff', staffRouteHandler);
-router.use('/personalisedService', personalisedServiceRouteHandler);
+router.use('/clients', clientRouteHandler);
+router.use('/vehicles', vehicleRouteHandler);
+router.use('/quotes', quoteRouteHandler);
+router.use('/invoices', invoiceRouteHandler);
+router.use('/staffs', staffRouteHandler);
+router.use('/personalisedServices', personalisedServiceRouteHandler);
 router.use(processResponse);
 
 /** Static Routes */
