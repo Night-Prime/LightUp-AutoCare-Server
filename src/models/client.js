@@ -18,7 +18,7 @@ const ClientSchema = new Schema({
     },
     telephone: Number,
     billingAddress: {
-        name: {
+        repName: {
             type: String,
             default: 'ATB TECHSOFT',
         },

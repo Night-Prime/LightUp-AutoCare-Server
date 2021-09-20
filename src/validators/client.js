@@ -5,4 +5,11 @@ module.exports = Joi.object({
     name: Joi.string().required().min(3).max(30),
     email: Joi.string().email({ minDomainSegments: 2 }).required(),
     telephone: Joi.number().required(),
+    billingAddress: Joi.object({
+        repName: Joi.string.required(),
+        address: Joi.string.required(),
+        city: Joi.string.required(),
+        postalCode: Joi.number.required(),
+        state: Joi.string.required()
+    }),
 });
