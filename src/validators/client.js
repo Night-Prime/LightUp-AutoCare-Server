@@ -7,9 +7,9 @@ module.exports = Joi.object({
     telephone: Joi.number().required(),
     billingAddress: Joi.object({
         repName: Joi.string.required(),
-        address: Joi.string.required(),
-        city: Joi.string.required(),
-        postalCode: Joi.number.required(),
-        state: Joi.string.required()
+        address: Joi.string(),
+        city: Joi.string(),
+        postalCode: Joi.number(),
+        state: Joi.string(),
     }),
 });
