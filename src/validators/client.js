@@ -6,7 +6,7 @@ module.exports = Joi.object({
     email: Joi.string().email({ minDomainSegments: 2 }).required(),
     telephone: Joi.number().required(),
     billingAddress: Joi.object({
-        repName: Joi.string.required(),
+        repName: Joi.string().required(),
         address: Joi.string(),
         city: Joi.string(),
         postalCode: Joi.number(),
