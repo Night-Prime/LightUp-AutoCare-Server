@@ -17,6 +17,28 @@ const ClientSchema = new Schema({
         unique: true,
     },
     telephone: Number,
+    billingAddress: {
+        name: {
+            type: String,
+            default: 'ATB TECHSOFT',
+        },
+        address: {
+            type: String,
+            default: '8 CMD ROAD',
+        },
+        city: {
+            type: String,
+            default: 'IKOSI KETU ',
+        },
+        postalCode: {
+            type: Number,
+            default: 100248,
+        },
+        state: {
+            type: String,
+            default: 'LAGOS',
+        },
+    },
     // Model Required fields
     isActive: {
         type: Boolean,
