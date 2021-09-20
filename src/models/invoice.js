@@ -91,5 +91,16 @@ const InvoiceSchema = new Schema({
         default: () => new Date(),
     },
 });
-
+InvoiceSchema.virtual('client', {
+    ref: 'Client',
+    localField: 'clientId',
+    foreignField: 'id',
+    justOne: true,
+});
+InvoiceSchema.virtual('vehicle', {
+    ref: 'Vehicle',
+    localField: 'vehicleId',
+    foreignField: 'id',
+    justOne: true,
+});
 model('Invoice', InvoiceSchema);

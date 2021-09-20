@@ -12,9 +12,9 @@ const signJWT = promisify(jwt.sign);
 
 const verifyJWT = promisify(jwt.verify);
 
-const _REQUEST = require('request');
-
 const nodemailer = require('nodemailer');
+
+const dateformat = require('dateformat');
 
 async function hashObject(object) {
     const salt = await bcrypt.genSalt(Number(SALT));
@@ -42,22 +42,14 @@ async function checkToken(token) {
     return await verifyJWT(token, secret_token);
 }
 
-async function doRequest(requestPayload) {
-    return new Promise(function (resolve, reject) {
-        _REQUEST(requestPayload, function (err, response) {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(response);
-            }
-        });
-    });
-}
-
 async function sendMail(transporterPayload, emailContent) {
     let transporter = nodemailer.createTransport(transporterPayload);
     const result = await transporter.sendMail(emailContent);
     return result;
+}
+
+function modifyDateFormat(date) {
+    return dateformat(date, dateformat.masks.longDate);
 }
 
 module.exports = {
@@ -69,7 +61,7 @@ module.exports = {
 
     checkToken,
 
-    doRequest,
-
     sendMail,
+
+    modifyDateFormat,
 };

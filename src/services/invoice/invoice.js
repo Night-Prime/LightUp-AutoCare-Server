@@ -1,6 +1,8 @@
 const RootService = require('../_root');
+const ClientService = require('../client/client');
 const { buildQuery, buildWildcardOptions } = require('../../utilities/query');
 const generateInvoiceEmitter = require('../../events/generateInvoice');
+const { modifyDateFormat } = require('../../utilities/packages');
 
 class InvoiceService extends RootService {
     constructor(sampleController, schemaValidator) {
@@ -13,23 +15,27 @@ class InvoiceService extends RootService {
     async createRecord(request, next) {
         try {
             const { body } = request;
-            const { clientId } = body;
+            const { clientId, vehicleId } = body;
             const { error } = this.schemaValidator.validate(body);
             if (error) throw new Error(error);
 
             delete body.id;
 
             const result = await this.sampleController.createRecord({ ...body });
-            const clientDetails = await this.sampleController.readRecords({
-                clientId,
-                isActive: true,
-            });
-            const { clientEmail } = clientDetails;
-            console.log(clientEmail);
             if (result.failed) {
                 throw new Error(result.error);
             } else {
-                generateInvoiceEmitter.emit('createInvoice', result, clientEmail);
+                const populatedClient = await this.sampleController.populateRecordVirtually(
+                    'client'
+                );
+                const populatedVehicle = await this.sampleController.populateRecordVirtually(
+                    'vehicle'
+                );
+                const { email } = populatedClient.client;
+                const { model, vehicleName } = populatedVehicle.vehicle;
+                result['model'] = model;
+                result['vehicleName'] = vehicleName;
+                generateInvoiceEmitter.emit('createInvoice', result, email);
                 return this.processSingleRead(result);
             }
         } catch (e) {

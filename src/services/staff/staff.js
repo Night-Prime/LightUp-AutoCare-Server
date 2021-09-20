@@ -21,7 +21,6 @@ class StaffService extends RootService {
             const result = await this.sampleController.updateStaffPassword(query.email, {
                 password: password,
             });
-            console.log('create password result', result);
             if (result.failed) {
                 throw new Error(result.error);
             }
@@ -39,8 +38,10 @@ class StaffService extends RootService {
         try {
             const { body } = request;
             const { error } = this.schemaValidator.validate(body);
-            if (error) throw new Error(error);
-
+            if (error) {
+                const err = this.processFailedResponse(`${error.message}`, 400);
+                return next(err);
+            }
             delete body.id;
             body.password ? (body.password = await hashObject(body.password)) : body;
 

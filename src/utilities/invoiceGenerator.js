@@ -1,5 +1,6 @@
 const fs = require('fs');
 const _PDFKIT = require('pdfkit');
+const { modifyDateFormat } = require('./packages');
 
 class InvoiceGenerator {
     constructor(invoice) {
@@ -10,7 +11,12 @@ class InvoiceGenerator {
         let pdfkit = new _PDFKIT();
         let pdfOutputFile = `./Invoice-${this.invoice.id}.pdf`;
         pdfkit.pipe(fs.createWriteStream(pdfOutputFile));
-        await this.writeContent(pdfkit);
+        try {
+            await this.writeContent(pdfkit);
+        } catch (error) {
+            console.error(error);
+        }
+
         pdfkit.end();
     }
 
@@ -28,7 +34,7 @@ class InvoiceGenerator {
             .text('INVOICE', 400, 25, { align: 'right' })
             .fontSize(10)
             .text(`Invoice Number: ${this.invoice.id}`, { align: 'right' })
-            .text(`Due Date: ${this.invoice.dueDate}`, { align: 'right' });
+            .text(`Due Date: ${modifyDateFormat(this.invoice.dueDate)}`, { align: 'right' });
         //  [COMMENT] A blank line between Balance Due and Billing Address.
         pdfkit.moveDown();
         pdfkit
@@ -44,7 +50,11 @@ class InvoiceGenerator {
         const _kPAGE_END = 580;
         //  [COMMENT] Draw a horizontal line.
         pdfkit.moveTo(_kPAGE_BEGIN, 200).lineTo(_kPAGE_END, 200).stroke();
-        pdfkit.text(`Memo: Service delivery is on ${this.invoice.dueDate} `, 50, 210);
+        pdfkit.text(
+            `Memo: Service delivery is on ${modifyDateFormat(this.invoice.dueDate)} `,
+            50,
+            210
+        );
         pdfkit.moveTo(_kPAGE_BEGIN, 250).lineTo(_kPAGE_END, 250).stroke();
     }
     generateTable(pdfkit) {

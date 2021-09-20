@@ -69,7 +69,6 @@ class Controller {
         }
     }
 
-    //
     async updateRecords(conditions, data) {
         try {
             const dataToSet = Controller.deleteRecordMetadata(data);
@@ -163,11 +162,14 @@ class Controller {
             return Controller.processError(e.message);
         }
     }
+
+    async populateRecordVirtually(model) {
+        try {
+            return await this.model.findOne().populate(model);
+        } catch (e) {
+            return Controller.processError(e.message);
+        }
+    }
 }
-/**
- * populate('clientNames')
-                .exec(function (err, result) {
-                    console.log('result', result);
-                });
- */
+
 module.exports = Controller;

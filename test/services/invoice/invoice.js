@@ -6,6 +6,7 @@ const Controller = require('../../controller/mock');
 const validator = {
     validate: sinon.fake.returns({}),
 };
+const generateInvoiceEmitter = require('../../../src/events/generateInvoice');
 
 let invoiceService = null;
 describe('Tests Sample Service:', () => {
@@ -18,10 +19,17 @@ describe('Tests Sample Service:', () => {
     afterEach(() => {
         next = null;
         invoiceService = null;
+        sinon.restore();
     });
 
     it('throws an error when body is not specified', async () => {
         await invoiceService.createRecord({}, next);
+        let stub = sinon.stub(generateInvoiceEmitter, 'on');
+        stub.withArgs('createInvoice')
+            .onFirstCall()
+            .returns(Promise.resolve())
+            .onSecondCall()
+            .returns(Promise.reject());
         next.called;
     });
 
@@ -31,6 +39,8 @@ describe('Tests Sample Service:', () => {
             name: 'Client Name',
             clientId: '2',
             vehicleId: '4',
+            model: 'Fake Model',
+            vehicleName: 'Fake',
             billingAddress: {
                 name: 'ATB TECHSOFT',
                 address: '8 CMD ROAD',
@@ -54,8 +64,15 @@ describe('Tests Sample Service:', () => {
                 },
             ],
         };
-        const result = await invoiceService.createRecordToSendClientMail({ body: data }, next);
+
+        let stub = sinon.stub(generateInvoiceEmitter, 'on');
+        const result = await invoiceService.createRecord({ body: data }, next);
+        stub.withArgs('createInvoice', result, 'test@email.com')
+            .onFirstCall()
+            .returns(Promise.resolve())
+            .onSecondCall.returns(Promise.resolve());
         expect(result.payload).to.haveOwnProperty('id');
+        next.called;
     });
 
     it('throws error when no id is specified', async () => {

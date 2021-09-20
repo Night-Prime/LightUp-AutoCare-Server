@@ -34,4 +34,8 @@ module.exports = {
     createRecordToSendClientMail: sinon.spy((data) => {
         return { ...data };
     }),
+
+    updateStaffPassword: sinon.spy((email, data) => {
+        return { ok: 1, nModified: 1 };
+    }),
 };

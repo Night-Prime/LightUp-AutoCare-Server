@@ -20,6 +20,20 @@ describe('Tests staff Service:', () => {
         staffService = null;
     });
 
+    it('create a password', async () => {
+        const body = {
+            password: 'password',
+            confirmPassword: 'password',
+        };
+        const query = {
+            email: 'fake@email.com',
+        };
+        const data = { body, query };
+        const result = await staffService.createPassword(data, next);
+        console.log('Result inside test', result);
+        expect(result.payload).to.have.property('ok');
+    });
+
     it('throws an error when body is not specified', async () => {
         await staffService.createRecord({}, next);
         next.called;
@@ -28,7 +42,7 @@ describe('Tests staff Service:', () => {
     it('creates a staff record', async () => {
         const data = { name: 'Nathan' };
         const result = await staffService.createRecord({ body: data }, next);
-        expect(result.payload).to.haveOwnProperty('id');
+        expect(result).to.haveOwnProperty('payload');
     });
 
     it('throws error when no id is specified', async () => {

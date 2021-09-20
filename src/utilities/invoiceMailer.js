@@ -3,7 +3,7 @@ const fs = require('fs/promises');
 const { sendMail } = require('../utilities/packages');
 
 async function sendMailToClient(invoice, clientEmail) {
-    const filePath = `./Invoice-${this.invoice.id}.pdf`;
+    const filePath = `./Invoice-${invoice.id}.pdf`;
     const transportPayload = {
         host: 'smtp.mailtrap.io',
         port: 2525,
