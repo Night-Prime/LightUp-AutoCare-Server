@@ -17,7 +17,10 @@ class QuoteService extends RootService {
         try {
             const { body } = request;
             const { error } = this.schemaValidator.validate(body);
-            if (error) throw new Error(error);
+            if (error) {
+                const err = this.processFailedResponse(`${error.message}`, 400);
+                return next(err);
+            }
 
             delete body.id;
             body['createdById'] = request.id;

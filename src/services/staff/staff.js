@@ -16,7 +16,10 @@ class StaffService extends RootService {
         try {
             const { body, query } = request;
             let { confirmPassword, password } = body;
-            if (confirmPassword !== password) throw new Error('Passwords do not match');
+            if (confirmPassword !== password) {
+                const err = this.processFailedResponse(`Passwords do not match`, 400);
+                return next(err);
+            }
             password = await hashObject(password);
             const result = await this.sampleController.updateStaffPassword(query.email, {
                 password: password,
@@ -69,10 +72,16 @@ class StaffService extends RootService {
 
             const [user] = await this.sampleController.readRecords({ email });
             if (user.failed) throw new Error(user.error);
-            if (user.isDeleted) throw new Error("User doesn't exist again");
+            if (user.isDeleted) {
+                const err = this.processFailedResponse(`"User doesn't exist again"`, 404);
+                return next(err);
+            }
 
             const validPassword = await verifyObject(password, user.password);
-            if (!validPassword) throw new Error('Invalid Password');
+            if (!validPassword) {
+                const err = this.processFailedResponse(`Invalid Password`, 400);
+                return next(err);
+            }
             const token = await generateToken({
                 id: user.id,
                 email: user.email,
@@ -97,7 +106,10 @@ class StaffService extends RootService {
     async readRecordById(request, next) {
         try {
             const { id } = request.params;
-            if (!id) throw new Error('Invalid ID supplied.');
+            if (!id) {
+                const err = this.processFailedResponse(`Invalid Id`, 400);
+                return next(err);
+            }
 
             const result = await this.sampleController.readRecords({ id, isActive: true });
             if (result.failed) {

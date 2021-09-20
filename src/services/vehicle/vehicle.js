@@ -13,7 +13,10 @@ class VehicleService extends RootService {
         try {
             const { body } = request;
             const { error } = this.schemaValidator.validate(body);
-            if (error) throw new Error(error);
+            if (error) {
+                const err = this.processFailedResponse(`${error.message}`, 400);
+                return next(err);
+            }
 
             delete body.id;
 
@@ -35,12 +38,8 @@ class VehicleService extends RootService {
     async readRecordById(request, next) {
         try {
             const { id } = request.params;
-            console.log('ID goes here');
-            console.log(id);
             if (!id) throw new Error('Invalid ID supplied.');
             const result = await this.vehicleController.populateVirtually({ id: parseInt(id) });
-            console.log(result);
-            // const result = await this.vehicleController.readRecords({ id, isActive: true });
             if (result.failed) {
                 throw new Error(result.error);
             } else {
@@ -58,11 +57,6 @@ class VehicleService extends RootService {
     async readRecordsByFilter(request, next) {
         try {
             const { query } = request;
-            console.log('i got here');
-            console.log('query here');
-            console.log(query);
-            //let popl = await this.vehicleController.populateVirtually({});
-
             const { id, clientId } = query;
 
             if (id) {
