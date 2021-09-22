@@ -3,7 +3,7 @@ const EventEmitter = require('events');
 const { buildQuery, buildWildcardOptions } = require('../../utilities/query');
 const { date } = require('@hapi/joi');
 const generatePdfEmitter = require('../../events/generateQuote');
-
+const axios = require('axios');
 class QuoteService extends RootService {
     constructor(quoteController, schemaValidator) {
         /** */
@@ -19,10 +19,24 @@ class QuoteService extends RootService {
             const { error } = this.schemaValidator.validate(body);
             if (error) throw new Error(error);
 
+            console.log(request);
             delete body.id;
             body['createdById'] = request.id;
             body['createdByName'] = request.name;
+            console.log(request.token);
+            const token = request.token;
 
+            const {
+                data: { payload },
+            } = await axios.get(
+                `https://lightup-auto-care.herokuapp.com/vehicles/${body.vehicleId}`,
+                { headers: { Authorization: `${token}` } }
+            );
+
+            console.log(payload);
+
+            body['vehicleName'] = payload.vehicleName;
+            body['clientName'] = payload.client[0].name;
             const result = await this.quoteController.createRecord({ ...body });
             if (result.failed) {
                 throw new Error(result.error);
