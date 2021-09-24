@@ -11,8 +11,16 @@ const QuoteSchema = new Schema({
         type: Number,
         required: true,
     },
+    clientName: {
+        type: String,
+        required: true,
+    },
     vehicleId: {
         type: Number,
+        required: true,
+    },
+    vehicleName: {
+        type: String,
         required: true,
     },
     items: [
