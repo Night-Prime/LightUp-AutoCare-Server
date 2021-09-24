@@ -66,7 +66,15 @@ class QuoteService extends RootService {
         try {
             const { query } = request;
 
-            const result = await this.quoteController.readRecords(query);
+            let result;
+            query
+                ? (result = await this.quoteController.readRecords({
+                      ...query,
+                      isActive: true,
+                  }))
+                : (result = await this.quoteController.readRecords({
+                      isActive: true,
+                  }));
             if (result.failed) {
                 throw new Error(result.error);
             } else {
