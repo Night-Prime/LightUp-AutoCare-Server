@@ -82,7 +82,7 @@ const QuoteSchema = new Schema({
     ],
 
     billingAddress: {
-        name: {
+        repName: {
             type: String,
             default: 'ATB TECHSOFT',
         },

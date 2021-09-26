@@ -40,6 +40,19 @@ class Controller {
         }
     }
 
+    async createInvoice(data) {
+        try {
+            const n = (await this.model.estimatedDocumentCount()) + 1;
+            data['invoiceId'] = `INV-${data.invoiceId}${n}`;
+            const recordToCreate = new this.model({ id: n, ...data });
+            const createdRecord = await recordToCreate.save();
+
+            return { ...Controller.jsonize(createdRecord) };
+        } catch (e) {
+            return Controller.processError(e.message);
+        }
+    }
+
     async readRecords(
         conditions,
         fieldsToReturn = '',

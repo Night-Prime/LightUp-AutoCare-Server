@@ -7,6 +7,10 @@ const InvoiceSchema = new Schema({
         unique: true,
         default: 0,
     },
+    invoiceId: {
+        type: String,
+        required: true,
+    },
     clientId: {
         type: Number,
         required: true,
@@ -16,7 +20,7 @@ const InvoiceSchema = new Schema({
         required: true,
     },
     billingAddress: {
-        name: {
+        repName: {
             type: String,
             default: 'ATB TECHSOFT',
         },

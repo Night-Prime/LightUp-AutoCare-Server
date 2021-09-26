@@ -11,6 +11,11 @@ class InvoiceService extends RootService {
         this.schemaValidator = schemaValidator;
         this.serviceName = 'InvoiceService';
     }
+    async getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+    }
 
     async createRecord(request, next) {
         try {
@@ -22,8 +27,9 @@ class InvoiceService extends RootService {
             }
 
             delete body.id;
-
-            const result = await this.sampleController.createRecord({ ...body });
+            const randomId = await this.getRandomInt(1000, 2000);
+            body['invoiceId'] = randomId;
+            const result = await this.sampleController.createInvoice({ ...body });
             if (result.failed) {
                 throw new Error(result.error);
             } else {

@@ -36,8 +36,6 @@ class QuoteService extends RootService {
                 { headers: { Authorization: `${token}` } }
             );
 
-            console.log(payload);
-
             body['vehicleName'] = payload.vehicleName;
             body['clientName'] = payload.client[0].name;
             const result = await this.quoteController.createRecord({ ...body });
