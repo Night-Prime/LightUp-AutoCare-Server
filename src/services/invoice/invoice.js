@@ -36,6 +36,7 @@ class InvoiceService extends RootService {
                 const populatedClient = await this.sampleController.populateRecordVirtually(
                     'client'
                 );
+
                 const populatedVehicle = await this.sampleController.populateRecordVirtually(
                     'vehicle'
                 );

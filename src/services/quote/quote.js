@@ -4,6 +4,7 @@ const { buildQuery, buildWildcardOptions } = require('../../utilities/query');
 const { date } = require('@hapi/joi');
 const generatePdfEmitter = require('../../events/generateQuote');
 const axios = require('axios');
+const { reset } = require('nodemon');
 class QuoteService extends RootService {
     constructor(quoteController, schemaValidator) {
         /** */
@@ -13,22 +14,34 @@ class QuoteService extends RootService {
         this.serviceName = 'QuoteService';
     }
 
+    async getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+    }
+
     async createRecord(request, next) {
         try {
             const { body } = request;
+
             const { error } = this.schemaValidator.validate(body);
             if (error) {
                 const err = this.processFailedResponse(`${error.message}`, 400);
                 return next(err);
             }
 
-            console.log(request);
+            // console.log(request);
             delete body.id;
-            body['createdById'] = request.id;
-            body['createdByName'] = request.name;
-            console.log(request.token);
             const token = request.token;
 
+            const randomId = await this.getRandomInt(1000, 2000);
+            body['quoteId'] = randomId;
+
+            body['createdById'] = request.id;
+            body['createdByName'] = request.name;
+
+            console.log('Inside payload displayed here');
+            console.log(body.vehicleId);
             const {
                 data: { payload },
             } = await axios.get(
@@ -38,16 +51,18 @@ class QuoteService extends RootService {
 
             body['vehicleName'] = payload.vehicleName;
             body['clientName'] = payload.client[0].name;
-            const result = await this.quoteController.createRecord({ ...body });
+            const result = await this.quoteController.createQuote({ ...body });
             if (result.failed) {
                 throw new Error(result.error);
             } else {
                 generatePdfEmitter.emit('createQuote', result);
+
                 return this.processSingleRead(result);
             }
         } catch (e) {
+            //console.log('Inside catch', e);
             const err = this.processFailedResponse(
-                `[${this.serviceName}] createRecord: ${e.message}`,
+                `[${this.serviceName}] createQuote: ${e.message}`,
                 500
             );
             return next(err);
@@ -149,7 +164,6 @@ class QuoteService extends RootService {
             }
 
             let arrayToPush = {
-                items: { ...data },
                 quoteHistory: {
                     updatedById: request.id,
                     updatedByName: request.name,

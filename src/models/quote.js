@@ -7,6 +7,10 @@ const QuoteSchema = new Schema({
         unique: true,
         default: 0,
     },
+    quoteId: {
+        type: String,
+        required: true,
+    },
     clientId: {
         type: Number,
         required: true,
