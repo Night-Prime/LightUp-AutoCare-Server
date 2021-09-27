@@ -53,6 +53,21 @@ class Controller {
         }
     }
 
+    async createQuote(data) {
+        try {
+            const n = (await this.model.estimatedDocumentCount()) + 1;
+            data['quoteId'] = `QUO-${data.quoteId}${n}`;
+            console.log(data);
+            const recordToCreate = new this.model({ id: n, ...data });
+            console.log(recordToCreate);
+            const createdRecord = await recordToCreate.save();
+
+            return { ...Controller.jsonize(createdRecord) };
+        } catch (e) {
+            return Controller.processError(e.message);
+        }
+    }
+
     async readRecords(
         conditions,
         fieldsToReturn = '',
@@ -115,7 +130,6 @@ class Controller {
     async updateAndPushRecords(conditions, data, arrayToPush) {
         try {
             const dataToSet = Controller.deleteRecordMetadata(data);
-
             const result = await this.model.updateMany(
                 { ...conditions },
                 {
