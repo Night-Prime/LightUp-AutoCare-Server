@@ -74,13 +74,6 @@ class QuoteService extends RootService {
     }
 
     async readRecordsByFilter(request, next) {
-        // const { query } = request;
-        // let result;
-
-        // if (result.failed) {
-        //     throw new Error(result.error);
-        // } else {
-        //     return this.processMultipleReadResults(result);
         try {
             const { query } = request;
 
