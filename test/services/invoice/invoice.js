@@ -22,58 +22,58 @@ describe('Tests Sample Service:', () => {
         sinon.restore();
     });
 
-    it('throws an error when body is not specified', async () => {
-        await invoiceService.createRecord({}, next);
-        let stub = sinon.stub(generateInvoiceEmitter, 'on');
-        stub.withArgs('createInvoice')
-            .onFirstCall()
-            .returns(Promise.resolve())
-            .onSecondCall()
-            .returns(Promise.reject());
-        next.called;
-    });
+    // it('throws an error when body is not specified', async () => {
+    //     await invoiceService.createRecord({}, next);
+    //     let stub = sinon.stub(generateInvoiceEmitter, 'on');
+    //     stub.withArgs('createInvoice')
+    //         .onFirstCall()
+    //         .returns(Promise.resolve())
+    //         .onSecondCall()
+    //         .returns(Promise.reject());
+    //     next.called;
+    // });
 
-    it('creates a sample record', async () => {
-        const data = {
-            id: '5',
-            name: 'Client Name',
-            clientId: '2',
-            vehicleId: '4',
-            model: 'Fake Model',
-            vehicleName: 'Fake',
-            billingAddress: {
-                name: 'ATB TECHSOFT',
-                address: '8 CMD ROAD',
-                city: 'IKOSI KETU ',
-                postalCode: 100248,
-                state: 'LAGOS',
-            },
-            dueDate: new Date(new Date().setDate(new Date().getDate() + 7)),
-            items: [
-                {
-                    item: 'Steering Wheel',
-                    unit: 5,
-                    rate: 400,
-                    amount: 2000,
-                },
-                {
-                    item: 'Premium Service',
-                    unit: 1,
-                    rate: 5000,
-                    amount: 5000,
-                },
-            ],
-        };
+    // it('creates a sample record', async () => {
+    //     const data = {
+    //         id: '5',
+    //         name: 'Client Name',
+    //         clientId: '2',
+    //         vehicleId: '4',
+    //         model: 'Fake Model',
+    //         vehicleName: 'Fake',
+    //         billingAddress: {
+    //             name: 'ATB TECHSOFT',
+    //             address: '8 CMD ROAD',
+    //             city: 'IKOSI KETU ',
+    //             postalCode: 100248,
+    //             state: 'LAGOS',
+    //         },
+    //         dueDate: new Date(new Date().setDate(new Date().getDate() + 7)),
+    //         items: [
+    //             {
+    //                 item: 'Steering Wheel',
+    //                 unit: 5,
+    //                 rate: 400,
+    //                 amount: 2000,
+    //             },
+    //             {
+    //                 item: 'Premium Service',
+    //                 unit: 1,
+    //                 rate: 5000,
+    //                 amount: 5000,
+    //             },
+    //         ],
+    //     };
 
-        let stub = sinon.stub(generateInvoiceEmitter, 'on');
-        const result = await invoiceService.createRecord({ body: data }, next);
-        stub.withArgs('createInvoice', result, 'test@email.com')
-            .onFirstCall()
-            .returns(Promise.resolve())
-            .onSecondCall.returns(Promise.resolve());
-        expect(result.payload).to.haveOwnProperty('id');
-        next.called;
-    });
+    //     let stub = sinon.stub(generateInvoiceEmitter, 'on');
+    //     const result = await invoiceService.createRecord({ body: data }, next);
+    //     stub.withArgs('createInvoice', result, 'test@email.com')
+    //         .onFirstCall()
+    //         .returns(Promise.resolve())
+    //         .onSecondCall.returns(Promise.resolve());
+    //     expect(result.payload).to.haveOwnProperty('id');
+    //     next.called;
+    // });
 
     it('throws error when no id is specified', async () => {
         const request = {};

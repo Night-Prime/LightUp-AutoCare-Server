@@ -17,7 +17,10 @@ class QuoteService extends RootService {
         try {
             const { body } = request;
             const { error } = this.schemaValidator.validate(body);
-            if (error) throw new Error(error);
+            if (error) {
+                const err = this.processFailedResponse(`${error.message}`, 400);
+                return next(err);
+            }
 
             console.log(request);
             delete body.id;
@@ -32,8 +35,6 @@ class QuoteService extends RootService {
                 `https://lightup-auto-care.herokuapp.com/vehicles/${body.vehicleId}`,
                 { headers: { Authorization: `${token}` } }
             );
-
-            console.log(payload);
 
             body['vehicleName'] = payload.vehicleName;
             body['clientName'] = payload.client[0].name;
@@ -79,8 +80,13 @@ class QuoteService extends RootService {
 
             let result;
             query
-                ? (result = await this.quoteController.readRecords({ ...query, isActive: true }))
-                : (result = await this.quoteController.readRecords({ isActive: true }));
+                ? (result = await this.quoteController.readRecords({
+                      ...query,
+                      isActive: true,
+                  }))
+                : (result = await this.quoteController.readRecords({
+                      isActive: true,
+                  }));
             if (result.failed) {
                 throw new Error(result.error);
             } else {

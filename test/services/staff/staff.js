@@ -30,7 +30,6 @@ describe('Tests staff Service:', () => {
         };
         const data = { body, query };
         const result = await staffService.createPassword(data, next);
-        console.log('Result inside test', result);
         expect(result.payload).to.have.property('ok');
     });
 
