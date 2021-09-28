@@ -30,10 +30,8 @@ class QuoteService extends RootService {
                 return next(err);
             }
 
-            // console.log(request);
             delete body.id;
-            const token =
-                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDMsImVtYWlsIjoic3VwZXJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJuYW1lIjoiU3VwZXIgQWRtaW4iLCJpYXQiOjE2MzI3NzI4NjUsImV4cCI6MTYzMjg1OTI2NX0.nCn-g7G2tLyqDE5D27ZhLoUHutV4e0JvxfjNfXfrdOA';
+            const token = request.token;
 
             const randomId = await this.getRandomInt(1000, 2000);
             body['quoteId'] = randomId;
@@ -42,7 +40,7 @@ class QuoteService extends RootService {
             body['createdByName'] = request.name;
 
             console.log('Inside payload displayed here');
-            console.log(body.vehicleId);
+
             const {
                 data: { payload },
             } = await axios.get(
