@@ -8,7 +8,7 @@ class QuoteGenerator {
     static totalAmount = 0;
     async generate() {
         let pdfkit = new _PDFKIT();
-        let pdfOutputFile = `./Quote-${this.quote.id}.pdf`;
+        let pdfOutputFile = `./Quote-${this.quote.quoteId}.pdf`;
         pdfkit.pipe(fs.createWriteStream(pdfOutputFile));
         await this.writeContent(pdfkit);
         pdfkit.end();
@@ -27,7 +27,7 @@ class QuoteGenerator {
             .fontSize(20)
             .text('QUOTE', 400, 25, { align: 'right' })
             .fontSize(10)
-            .text(`Quote Number: ${this.quote.id}`, { align: 'right' });
+            .text(`Quote Number: ${this.quote.quoteId}`, { align: 'right' });
         //  [COMMENT] A blank line between Balance Due and Billing Address.
         pdfkit.moveDown();
         pdfkit
@@ -35,6 +35,7 @@ class QuoteGenerator {
             .text(`${this.quote.billingAddress.address}\n${this.quote.billingAddress.city}`, {
                 align: 'right',
             })
+
             .text(`${this.quote.billingAddress.state} ${this.quote.billingAddress.postalCode}`, {
                 align: 'right',
             });

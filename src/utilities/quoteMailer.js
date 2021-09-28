@@ -2,7 +2,7 @@ require('dotenv').config();
 const fs = require('fs/promises');
 const nodemailer = require('nodemailer');
 
-async function sendMailToClient(quote) {
+async function sendMailToClient(quote, clientEmail) {
     const filePath = `./Quote-${quote.id}.pdf`;
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
@@ -18,8 +18,8 @@ async function sendMailToClient(quote) {
     await transporter
         .sendMail({
             from: process.env.email, // sender address
-            to: process.env.email,
-            subject: `Quote for ${quote.model}`,
+            to: clientEmail,
+            subject: `Quote for ${quote.model} ${quote.vehicleName}`,
             text: 'We care about your safety',
             html: '<b>LightUp AutoCare</b>',
             attachments: [
