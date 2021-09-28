@@ -3,7 +3,7 @@ const fs = require('fs/promises');
 const nodemailer = require('nodemailer');
 
 async function sendMailToClient(quote, clientEmail) {
-    const filePath = `./Quote-${quote.id}.pdf`;
+    const filePath = `./Quote-${quote.quoteId}.pdf`;
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
         host: 'smtp.mailtrap.io',
@@ -24,13 +24,12 @@ async function sendMailToClient(quote, clientEmail) {
             html: '<b>LightUp AutoCare</b>',
             attachments: [
                 {
-                    filename: `Quote-${quote.id}.pdf`,
+                    filename: `Quote-${quote.quoteId}.pdf`,
                     path: filePath,
                 },
             ],
         })
         .then(async () => {
-            console.log('this should be success');
             await fs.unlink(filePath);
             console.log(`successfully deleted ${filePath}`);
         })
