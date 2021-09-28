@@ -37,6 +37,6 @@ app.use('/', require('./src/routes/_config'));
 let ON = PORT || APP_PORT;
 
 /** Starting Server */
-app.listen(ON, () => {
+app.listen(ON, '0.0.0.0', () => {
     console.log(`Server started on port ${ON}`);
 });
