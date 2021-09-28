@@ -1,10 +1,8 @@
 const RootService = require('../_root');
-const EventEmitter = require('events');
 const { buildQuery, buildWildcardOptions } = require('../../utilities/query');
-const { date } = require('@hapi/joi');
 const generatePdfEmitter = require('../../events/generateQuote');
 const axios = require('axios');
-const { reset } = require('nodemon');
+
 class QuoteService extends RootService {
     constructor(quoteController, schemaValidator) {
         /** */
@@ -32,7 +30,6 @@ class QuoteService extends RootService {
 
             delete body.id;
             const token = request.token;
-
             const randomId = await this.getRandomInt(1000, 2000);
             body['quoteId'] = randomId;
 
@@ -142,7 +139,15 @@ class QuoteService extends RootService {
             return next(err);
         }
     }
+    async makeAxiosGetCall(api, id, token) {
+        const {
+            data: { payload },
+        } = await axios.get(`https://lightup-auto-care.herokuapp.com/${api}/${id}`, {
+            headers: { Authorization: `${token}` },
+        });
 
+        return payload;
+    }
     async updateRecordById(request, next) {
         try {
             const { id } = request.params;
@@ -177,10 +182,21 @@ class QuoteService extends RootService {
                 data,
                 arrayToPush
             );
+            const token = request.token;
+
+            const payload = await this.makeAxiosGetCall('vehicles', result.vehicleId, token);
+            const { quoteId } = await this.makeAxiosGetCall('quotes', id, token);
+            result['quoteId'] = quoteId;
+            result['vehicleName'] = payload.vehicleName;
+            result['clientName'] = payload.client[0].name;
+            result['billingAddress'] = payload.client[0].billingAddress;
+
+            result['model'] = payload.model;
+            const email = payload.client[0].email;
             if (result.failed) {
                 throw new Error(result.error);
             } else {
-                generatePdfEmitter.emit('createQoute', result);
+                generatePdfEmitter.emit('createQuote', result, email);
                 return this.processUpdateResult(result);
             }
         } catch (e) {
@@ -257,5 +273,3 @@ class QuoteService extends RootService {
 }
 
 module.exports = QuoteService;
-
-// module.exports = quoteEmitter;
