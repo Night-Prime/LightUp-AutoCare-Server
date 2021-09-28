@@ -14,7 +14,7 @@ class QuoteService extends RootService {
     async getRandomInt(min, max) {
         min = Math.ceil(min);
         max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+        return Math.floor(Math.random() * (max - min) + min);
     }
 
     async createRecord(request, next) {
@@ -28,7 +28,9 @@ class QuoteService extends RootService {
             }
 
             delete body.id;
-            const token = request.token;
+            const token =
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDMsImVtYWlsIjoic3VwZXJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJuYW1lIjoiU3VwZXIgQWRtaW4iLCJpYXQiOjE2MzI4MjYxODIsImV4cCI6MTYzMjkxMjU4Mn0.bdrHXbf4MUulPVv5sxbyM6ZXdHDvnfsGFKvmQmwJDMo';
+            // request.token;
 
             const randomId = await this.getRandomInt(1000, 2000);
             body['quoteId'] = randomId;
@@ -44,16 +46,19 @@ class QuoteService extends RootService {
 
             body['vehicleName'] = payload.vehicleName;
             body['clientName'] = payload.client[0].name;
+            body['billingAddress'] = payload.client[0].billingAddress;
+
             const result = await this.quoteController.createQuote({ ...body });
+            result['model'] = payload.model;
+            const email = payload.client[0].email;
             if (result.failed) {
                 throw new Error(result.error);
             } else {
-                generatePdfEmitter.emit('createQuote', result);
+                generatePdfEmitter.emit('createQuote', result, email);
 
                 return this.processSingleRead(result);
             }
         } catch (e) {
-            //console.log('Inside catch', e);
             const err = this.processFailedResponse(
                 `[${this.serviceName}] createQuote: ${e.message}`,
                 500

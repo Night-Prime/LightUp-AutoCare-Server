@@ -8,9 +8,13 @@ class QuoteGenerator {
     static totalAmount = 0;
     async generate() {
         let pdfkit = new _PDFKIT();
-        let pdfOutputFile = `./Quote-${this.quote.id}.pdf`;
+        let pdfOutputFile = `./Quote-${this.quote.quoteId}.pdf`;
         pdfkit.pipe(fs.createWriteStream(pdfOutputFile));
-        await this.writeContent(pdfkit);
+        try {
+            await this.writeContent(pdfkit);
+        } catch (error) {
+            console.error(error);
+        }
         pdfkit.end();
     }
 
@@ -27,14 +31,15 @@ class QuoteGenerator {
             .fontSize(20)
             .text('QUOTE', 400, 25, { align: 'right' })
             .fontSize(10)
-            .text(`Quote Number: ${this.quote.id}`, { align: 'right' });
+            .text(`Quote Number: ${this.quote.quoteId}`, { align: 'right' });
         //  [COMMENT] A blank line between Balance Due and Billing Address.
         pdfkit.moveDown();
         pdfkit
-            .text(`Billing Address:\n${this.quote.billingAddress.name}`, { align: 'right' })
+            .text(`Billing Address:\n${this.quote.billingAddress.repName}`, { align: 'right' })
             .text(`${this.quote.billingAddress.address}\n${this.quote.billingAddress.city}`, {
                 align: 'right',
             })
+
             .text(`${this.quote.billingAddress.state} ${this.quote.billingAddress.postalCode}`, {
                 align: 'right',
             });
@@ -43,15 +48,20 @@ class QuoteGenerator {
         //  [COMMENT] Draw a horizontal line to make it clearer.
         pdfkit.moveTo(_kPAGE_BEGIN, 200).lineTo(_kPAGE_END, 200).stroke();
     }
+    generateHr(doc, y) {
+        doc.strokeColor('#aaaaaa').lineWidth(1).moveTo(50, y).lineTo(550, y).stroke();
+    }
     generateTable(pdfkit) {
         const _kTABLE_TOP_Y = 270;
         const _kITEM_CODE_X = 50;
-        const _kQUANTITY_X = 250;
-        const _kPRICE_X = 300;
-        const _kAMOUNT_X = 350;
+        const _kDESCRIPTION_X = 150;
+        const _kQUANTITY_X = 320;
+        const _kPRICE_X = 370;
+        const _kAMOUNT_X = 440;
         pdfkit
             .fontSize(10)
             .text('Item No.', _kITEM_CODE_X, _kTABLE_TOP_Y, { bold: true, underline: true })
+            .text(`Service`, _kDESCRIPTION_X, _kTABLE_TOP_Y)
             .text('Unit', _kQUANTITY_X, _kTABLE_TOP_Y, { bold: true, underline: true })
             .text('Rate', _kPRICE_X, _kTABLE_TOP_Y, { bold: true, underline: true })
             .text('Amount', _kAMOUNT_X, _kTABLE_TOP_Y, { bold: true, underline: true });
@@ -63,9 +73,11 @@ class QuoteGenerator {
             pdfkit
                 .fontSize(10)
                 .text(`(${idx + 1})`, _kITEM_CODE_X, yCoord)
+                .text(`${item.item}`, _kDESCRIPTION_X, yCoord)
                 .text(`${item.unit}`, _kQUANTITY_X, yCoord)
                 .text(`${item.rate}`, _kPRICE_X, yCoord)
                 .text(`${item.rate * item.unit}`, _kAMOUNT_X, yCoord);
+            this.generateHr(pdfkit, yCoord + 20);
             QuoteGenerator.totalAmount += item.rate * item.unit;
         }
         pdfkit
