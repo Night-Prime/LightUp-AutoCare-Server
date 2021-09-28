@@ -1,10 +1,7 @@
 const RootService = require('../_root');
-const EventEmitter = require('events');
 const { buildQuery, buildWildcardOptions } = require('../../utilities/query');
-const { date } = require('@hapi/joi');
 const generatePdfEmitter = require('../../events/generateQuote');
 const axios = require('axios');
-const { reset } = require('nodemon');
 class QuoteService extends RootService {
     constructor(quoteController, schemaValidator) {
         /** */
