@@ -40,7 +40,7 @@ class QuoteGenerator {
             });
         const _kPAGE_BEGIN = 25;
         const _kPAGE_END = 580;
-        //  [COMMENT] Draw a horizontal line.
+        //  [COMMENT] Draw a horizontal line to make it clearer.
         pdfkit.moveTo(_kPAGE_BEGIN, 200).lineTo(_kPAGE_END, 200).stroke();
     }
     generateTable(pdfkit) {

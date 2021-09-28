@@ -4,6 +4,13 @@ module.exports = Joi.object({
     id: Joi.string().min(1).max(Number.MAX_SAFE_INTEGER),
     clientId: Joi.string().min(1).max(Number.MAX_SAFE_INTEGER),
     vehicleId: Joi.string().min(1).max(Number.MAX_SAFE_INTEGER),
+    billingAddress: Joi.object({
+        repName: Joi.string().required().min(3).max(100),
+        address: Joi.string().required().min(3).max(255),
+        city: Joi.string().required().min(3).max(255),
+        postalCode: Joi.number().required().min(1).max(Number.MAX_SAFE_INTEGER),
+        state: Joi.string().required().min(3).max(100),
+    }),
     items: Joi.array().items(
         Joi.object({
             item: Joi.string().required().min(3).max(30),

@@ -38,9 +38,6 @@ class QuoteService extends RootService {
 
             body['createdById'] = request.id;
             body['createdByName'] = request.name;
-
-            console.log('Inside payload displayed here');
-
             const {
                 data: { payload },
             } = await axios.get(
