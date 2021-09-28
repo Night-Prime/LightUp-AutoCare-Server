@@ -30,7 +30,6 @@ class QuoteService extends RootService {
                 return next(err);
             }
 
-            // console.log(request);
             delete body.id;
             const token = request.token;
 
@@ -39,9 +38,6 @@ class QuoteService extends RootService {
 
             body['createdById'] = request.id;
             body['createdByName'] = request.name;
-
-            console.log('Inside payload displayed here');
-            console.log(body.vehicleId);
             const {
                 data: { payload },
             } = await axios.get(

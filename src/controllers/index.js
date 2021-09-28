@@ -57,9 +57,7 @@ class Controller {
         try {
             const n = (await this.model.estimatedDocumentCount()) + 1;
             data['quoteId'] = `QUO-${data.quoteId}${n}`;
-            console.log(data);
             const recordToCreate = new this.model({ id: n, ...data });
-            console.log(recordToCreate);
             const createdRecord = await recordToCreate.save();
 
             return { ...Controller.jsonize(createdRecord) };
