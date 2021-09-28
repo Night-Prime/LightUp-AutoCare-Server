@@ -31,9 +31,7 @@ class QuoteService extends RootService {
             }
 
             delete body.id;
-            const token =
-                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDMsImVtYWlsIjoic3VwZXJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJuYW1lIjoiU3VwZXIgQWRtaW4iLCJpYXQiOjE2MzI4MjYxODIsImV4cCI6MTYzMjkxMjU4Mn0.bdrHXbf4MUulPVv5sxbyM6ZXdHDvnfsGFKvmQmwJDMo';
-            // request.token;
+            const token = request.token;
 
             const randomId = await this.getRandomInt(1000, 2000);
             body['quoteId'] = randomId;
