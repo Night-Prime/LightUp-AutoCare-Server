@@ -52,7 +52,10 @@ const QuoteSchema = new Schema({
             },
         },
     ],
-
+    totalAmount: {
+        type: Number,
+        required: true,
+    },
     // isPending is true until the client accepts the quote
     isPending: {
         type: Boolean,

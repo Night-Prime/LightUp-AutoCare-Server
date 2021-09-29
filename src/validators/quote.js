@@ -14,6 +14,7 @@ module.exports = Joi.object({
             amount: Joi.number().required().min(1),
         })
     ),
+    totalAmount: Joi.number(),
     isPending: Joi.boolean(),
     isPending: Joi.boolean(),
 });
