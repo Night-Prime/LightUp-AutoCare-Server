@@ -30,6 +30,7 @@ class QuoteService extends RootService {
 
             delete body.id;
             const token = request.token;
+
             const randomId = await this.getRandomInt(1000, 2000);
             body['quoteId'] = randomId;
 
