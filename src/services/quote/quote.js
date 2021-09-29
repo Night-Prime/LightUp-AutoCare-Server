@@ -2,6 +2,7 @@ const RootService = require('../_root');
 const { buildQuery, buildWildcardOptions } = require('../../utilities/query');
 const generatePdfEmitter = require('../../events/generateQuote');
 const axios = require('axios');
+
 class QuoteService extends RootService {
     constructor(quoteController, schemaValidator) {
         /** */
@@ -28,10 +29,7 @@ class QuoteService extends RootService {
             }
 
             delete body.id;
-            const token =
-                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDMsImVtYWlsIjoic3VwZXJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJuYW1lIjoiU3VwZXIgQWRtaW4iLCJpYXQiOjE2MzI4MjYxODIsImV4cCI6MTYzMjkxMjU4Mn0.bdrHXbf4MUulPVv5sxbyM6ZXdHDvnfsGFKvmQmwJDMo';
-            // request.token;
-
+            const token = request.token;
             const randomId = await this.getRandomInt(1000, 2000);
             body['quoteId'] = randomId;
 
@@ -141,7 +139,15 @@ class QuoteService extends RootService {
             return next(err);
         }
     }
+    async makeAxiosGetCall(api, id, token) {
+        const {
+            data: { payload },
+        } = await axios.get(`https://lightup-auto-care.herokuapp.com/${api}/${id}`, {
+            headers: { Authorization: `${token}` },
+        });
 
+        return payload;
+    }
     async updateRecordById(request, next) {
         try {
             const { id } = request.params;
@@ -176,10 +182,21 @@ class QuoteService extends RootService {
                 data,
                 arrayToPush
             );
+            const token = request.token;
+
+            const payload = await this.makeAxiosGetCall('vehicles', result.vehicleId, token);
+            const { quoteId } = await this.makeAxiosGetCall('quotes', id, token);
+            result['quoteId'] = quoteId;
+            result['vehicleName'] = payload.vehicleName;
+            result['clientName'] = payload.client[0].name;
+            result['billingAddress'] = payload.client[0].billingAddress;
+
+            result['model'] = payload.model;
+            const email = payload.client[0].email;
             if (result.failed) {
                 throw new Error(result.error);
             } else {
-                generatePdfEmitter.emit('createQoute', result);
+                generatePdfEmitter.emit('createQuote', result, email);
                 return this.processUpdateResult(result);
             }
         } catch (e) {
@@ -256,5 +273,3 @@ class QuoteService extends RootService {
 }
 
 module.exports = QuoteService;
-
-// module.exports = quoteEmitter;
