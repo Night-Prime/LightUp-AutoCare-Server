@@ -77,6 +77,7 @@ const QuoteSchema = new Schema({
     },
     quoteHistory: [
         {
+            updatedByName: String,
             updatedById: {
                 type: String,
             },
