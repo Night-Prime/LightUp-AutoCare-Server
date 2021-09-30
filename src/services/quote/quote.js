@@ -36,6 +36,7 @@ class QuoteService extends RootService {
 
             body['createdById'] = request.id;
             body['createdByName'] = request.name;
+
             const {
                 data: { payload },
             } = await axios.get(
@@ -175,7 +176,7 @@ class QuoteService extends RootService {
                     updatedOn: new Date(),
                 },
             };
-
+            console.log(arrayToPush);
             let conditions = { id };
 
             const result = await this.quoteController.updateAndPushRecords(
