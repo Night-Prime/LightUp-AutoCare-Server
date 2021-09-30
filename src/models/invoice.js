@@ -68,6 +68,10 @@ const InvoiceSchema = new Schema({
             },
         },
     ],
+    totalAmount: {
+        type: Number,
+        required: true,
+    },
     // Model Required fields
     isActive: {
         type: Boolean,

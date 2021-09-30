@@ -19,4 +19,5 @@ module.exports = Joi.object({
             amount: Joi.number().required().min(1).max(Number.MAX_SAFE_INTEGER),
         })
     ),
+    totalAmount: Joi.string().required().min(1).max(Number.MAX_SAFE_INTEGER),
 });
