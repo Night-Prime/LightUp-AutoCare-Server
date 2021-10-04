@@ -95,8 +95,15 @@ class InvoiceService extends RootService {
     async readRecordsByFilter(request, next) {
         try {
             const { query } = request;
-
-            const result = await this.sampleController.readRecords(query);
+            let result;
+            Object.keys(query).length !== 0
+                ? (result = await this.sampleController.readRecords({
+                      ...query,
+                      isActive: true,
+                  }))
+                : (result = await this.sampleController.readRecords({
+                      isActive: true,
+                  }));
             if (result.failed) {
                 throw new Error(result.error);
             } else {
