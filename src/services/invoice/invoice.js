@@ -100,6 +100,18 @@ class InvoiceService extends RootService {
             if (result.failed) {
                 throw new Error(result.error);
             } else {
+                const populatedClient = await this.sampleController.populateRecordVirtually(
+                    'client'
+                );
+
+                const populatedVehicle = await this.sampleController.populateRecordVirtually(
+                    'vehicle'
+                );
+                const { name } = populatedClient.client;
+                const { model, vehicleName } = populatedVehicle.vehicle;
+                result[0]['clientName'] = name;
+                result[0]['model'] = model;
+                result[0]['vehicleName'] = vehicleName;
                 return this.processMultipleReadResults(result);
             }
         } catch (e) {
