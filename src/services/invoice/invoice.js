@@ -62,8 +62,12 @@ class InvoiceService extends RootService {
             if (!id) throw new Error('Invalid ID supplied.');
 
             const result = await this.sampleController.readRecords({ id, isActive: true });
-            if (result.failed) {
-                throw new Error(result.error);
+            if (result.length === 0) {
+                const err = this.processFailedResponse(
+                    `Invoice is deleted and cannot be found`,
+                    404
+                );
+                next(err);
             } else {
                 const populatedClient = await this.sampleController.populateRecordVirtually(
                     'client'
