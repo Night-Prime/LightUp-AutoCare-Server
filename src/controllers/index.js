@@ -31,7 +31,7 @@ class Controller {
         try {
             const n = (await this.model.estimatedDocumentCount()) + 1;
 
-            const recordToCreate = new this.model({ id: n, ...data });
+            const recordToCreate = new this.model({ id: n, _id: n, ...data });
             const createdRecord = await recordToCreate.save();
 
             return { ...Controller.jsonize(createdRecord) };
@@ -192,6 +192,24 @@ class Controller {
         try {
             return await this.model.findOne().populate(model);
         } catch (e) {
+            return Controller.processError(e.message);
+        }
+    }
+
+    async populateInvoice(conditions) {
+        try {
+            return await this.model
+                .find({ ...conditions }, { _id: 0 })
+                .populate({
+                    path: 'clientId',
+                    select: 'name email',
+                })
+                .populate({
+                    path: 'vehicleId',
+                    select: 'vehicleName model',
+                })
+                .exec();
+        } catch (error) {
             return Controller.processError(e.message);
         }
     }

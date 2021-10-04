@@ -5,7 +5,10 @@ const VehicleSchema = new Schema({
         type: Number,
         required: true,
         unique: true,
-        default: 0,
+    },
+    _id: {
+        type: Number,
+        required: true,
     },
     vehicleName: {
         type: String,

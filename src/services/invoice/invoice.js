@@ -1,8 +1,6 @@
 const RootService = require('../_root');
-const ClientService = require('../client/client');
 const { buildQuery, buildWildcardOptions } = require('../../utilities/query');
 const generateInvoiceEmitter = require('../../events/generateInvoice');
-const { modifyDateFormat } = require('../../utilities/packages');
 
 class InvoiceService extends RootService {
     constructor(sampleController, schemaValidator) {
@@ -33,15 +31,13 @@ class InvoiceService extends RootService {
             if (result.failed) {
                 throw new Error(result.error);
             } else {
-                const populatedClient = await this.sampleController.populateRecordVirtually(
-                    'client'
-                );
-
-                const populatedVehicle = await this.sampleController.populateRecordVirtually(
-                    'vehicle'
-                );
-                const { email } = populatedClient.client;
-                const { model, vehicleName } = populatedVehicle.vehicle;
+                const { id } = result;
+                const populatedResult = await this.sampleController.populateInvoice({
+                    id,
+                    isActive: true,
+                });
+                const { email } = populatedResult[0].clientId;
+                const { model, vehicleName } = populatedResult[0].vehicleId;
                 result['model'] = model;
                 result['vehicleName'] = vehicleName;
                 generateInvoiceEmitter.emit('createInvoice', result, email);
@@ -61,7 +57,7 @@ class InvoiceService extends RootService {
             const { id } = request.params;
             if (!id) throw new Error('Invalid ID supplied.');
 
-            const result = await this.sampleController.readRecords({ id, isActive: true });
+            const result = await this.sampleController.populateInvoice({ id, isActive: true });
             if (result.length === 0) {
                 const err = this.processFailedResponse(
                     `Invoice is deleted and cannot be found`,
@@ -69,19 +65,21 @@ class InvoiceService extends RootService {
                 );
                 next(err);
             } else {
-                const populatedClient = await this.sampleController.populateRecordVirtually(
-                    'client'
-                );
-
-                const populatedVehicle = await this.sampleController.populateRecordVirtually(
-                    'vehicle'
-                );
-                const { name } = populatedClient.client;
-                const { model, vehicleName } = populatedVehicle.vehicle;
-                result[0]['clientName'] = name;
-                result[0]['model'] = model;
-                result[0]['vehicleName'] = vehicleName;
-                return this.processSingleRead(result[0]);
+                const [userDetails] = result.map((invoice) => {
+                    const clientName = invoice.clientId.name;
+                    const vehicleName = invoice.vehicleId.vehicleName;
+                    const clientId = invoice.clientId._id;
+                    const vehicleId = invoice.vehicleId._id;
+                    return {
+                        ...invoice.toObject(),
+                        clientName,
+                        vehicleName,
+                        clientId,
+                        vehicleId,
+                    };
+                });
+                console.log(userDetails);
+                return this.processSingleRead(userDetails);
             }
         } catch (e) {
             const err = this.processFailedResponse(
@@ -97,29 +95,30 @@ class InvoiceService extends RootService {
             const { query } = request;
             let result;
             Object.keys(query).length !== 0
-                ? (result = await this.sampleController.readRecords({
+                ? (result = await this.sampleController.populateInvoice({
                       ...query,
                       isActive: true,
                   }))
-                : (result = await this.sampleController.readRecords({
+                : (result = await this.sampleController.populateInvoice({
                       isActive: true,
                   }));
             if (result.failed) {
                 throw new Error(result.error);
             } else {
-                const populatedClient = await this.sampleController.populateRecordVirtually(
-                    'client'
-                );
-
-                const populatedVehicle = await this.sampleController.populateRecordVirtually(
-                    'vehicle'
-                );
-                const { name } = populatedClient.client;
-                const { model, vehicleName } = populatedVehicle.vehicle;
-                result[0]['clientName'] = name;
-                result[0]['model'] = model;
-                result[0]['vehicleName'] = vehicleName;
-                return this.processMultipleReadResults(result);
+                const userDetails = result.map((invoice) => {
+                    const clientName = invoice.clientId.name;
+                    const vehicleName = invoice.vehicleId.vehicleName;
+                    const clientId = invoice.clientId._id;
+                    const vehicleId = invoice.vehicleId._id;
+                    return {
+                        ...invoice.toObject(),
+                        clientName,
+                        vehicleName,
+                        clientId,
+                        vehicleId,
+                    };
+                });
+                return this.processMultipleReadResults(userDetails);
             }
         } catch (e) {
             const err = this.processFailedResponse(

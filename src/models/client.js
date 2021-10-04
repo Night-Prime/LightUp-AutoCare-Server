@@ -5,7 +5,10 @@ const ClientSchema = new Schema({
         type: Number,
         required: true,
         unique: true,
-        default: 0,
+    },
+    _id: {
+        type: Number,
+        required: true,
     },
     name: {
         type: String,

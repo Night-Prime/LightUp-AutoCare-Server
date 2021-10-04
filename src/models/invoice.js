@@ -5,18 +5,19 @@ const InvoiceSchema = new Schema({
         type: Number,
         required: true,
         unique: true,
-        default: 0,
     },
     invoiceId: {
         type: String,
         required: true,
     },
     clientId: {
-        type: Number,
+        type: Schema.Types.Number,
+        ref: 'Client',
         required: true,
     },
     vehicleId: {
-        type: Number,
+        type: Schema.Types.Number,
+        ref: 'Vehicle',
         required: true,
     },
     billingAddress: {
@@ -99,16 +100,16 @@ const InvoiceSchema = new Schema({
         default: () => new Date(),
     },
 });
-InvoiceSchema.virtual('client', {
-    ref: 'Client',
-    localField: 'clientId',
-    foreignField: 'id',
-    justOne: true,
-});
-InvoiceSchema.virtual('vehicle', {
-    ref: 'Vehicle',
-    localField: 'vehicleId',
-    foreignField: 'id',
-    justOne: true,
-});
+// InvoiceSchema.virtual('client', {
+//     ref: 'Client',
+//     localField: 'clientId',
+//     foreignField: 'id',
+//     justOne: true,
+// });
+// InvoiceSchema.virtual('vehicle', {
+//     ref: 'Vehicle',
+//     localField: 'vehicleId',
+//     foreignField: 'id',
+//     justOne: true,
+// });
 model('Invoice', InvoiceSchema);
