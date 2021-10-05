@@ -203,10 +203,12 @@ class Controller {
                 .populate({
                     path: 'clientId',
                     select: 'name email',
+                    match: { $or: [{ isDeleted: false }, { isDeleted: true }] },
                 })
                 .populate({
                     path: 'vehicleId',
                     select: 'vehicleName model',
+                    match: { $or: [{ isDeleted: false }, { isDeleted: true }] },
                 })
                 .exec();
         } catch (error) {
