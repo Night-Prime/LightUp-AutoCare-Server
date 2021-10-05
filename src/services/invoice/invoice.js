@@ -105,12 +105,6 @@ class InvoiceService extends RootService {
             if (result.failed) {
                 throw new Error(result.error);
             } else {
-                for (let i = 0; i < result.length; i++) {
-                    if (!result[i].clientId || !result[i].vehicleId) {
-                        delete result[i];
-                    }
-                }
-
                 const userDetails = result.map((invoice) => {
                     const clientName = invoice.clientId.name;
                     const vehicleName = invoice.vehicleId.vehicleName;
