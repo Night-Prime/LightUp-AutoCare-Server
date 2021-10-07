@@ -172,7 +172,8 @@ class QuoteService extends RootService {
             if (
                 !data.isPending &&
                 data.isApproved &&
-                (request.role !== 'admin' || request.role !== 'approver')
+                request.role !== 'admin' &&
+                request.role !== 'approver'
             ) {
                 throw new Error('Requires admin or approver privilege');
             }
@@ -233,6 +234,7 @@ class QuoteService extends RootService {
                 return this.processUpdateResult({ ...data, ...result });
             }
         } catch (e) {
+            console.log(e);
             const err = this.processFailedResponse(
                 `[${this.serviceName}] updateRecords: ${e.message}`,
                 500
