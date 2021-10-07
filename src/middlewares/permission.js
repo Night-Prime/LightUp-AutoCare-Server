@@ -33,7 +33,7 @@ function checkAdminAccess(request, response, next) {
 }
 
 const verifyToken = async (request, response, next) => {
-    const bearerToken = request.headers['authorization'] || request.query.password_token;
+    const bearerToken = request.headers['authorization'] || request.body.password_token;
     if (!bearerToken) {
         next(responseError);
     }

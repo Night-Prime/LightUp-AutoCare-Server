@@ -76,7 +76,13 @@ class StaffService extends RootService {
                 const err = this.processFailedResponse(`"User doesn't exist again"`, 404);
                 return next(err);
             }
-
+            if (!user.password) {
+                const err = this.processFailedResponse(
+                    `This user doesn't have a password yet`,
+                    404
+                );
+                return next(err);
+            }
             const validPassword = await verifyObject(password, user.password);
             if (!validPassword) {
                 const err = this.processFailedResponse(`Invalid Password`, 400);
@@ -95,6 +101,7 @@ class StaffService extends RootService {
             };
             return this.processSingleRead(result);
         } catch (e) {
+            console.log(e);
             const err = this.processFailedResponse(
                 `[${this.serviceName}] authenticateUser: ${e.message}`,
                 500
