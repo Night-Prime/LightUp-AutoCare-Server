@@ -5,7 +5,7 @@ class QuoteGenerator {
     constructor(quote) {
         this.quote = quote;
     }
-    static totalAmount = 0;
+    //static totalAmount = 0;
     async generate() {
         let pdfkit = new _PDFKIT();
         let pdfOutputFile = `./Quote-${this.quote.quoteId}.pdf`;
@@ -78,7 +78,6 @@ class QuoteGenerator {
                 .text(`${item.rate}`, _kPRICE_X, yCoord)
                 .text(`${item.rate * item.unit}`, _kAMOUNT_X, yCoord);
             this.generateHr(pdfkit, yCoord + 20);
-            QuoteGenerator.totalAmount += item.rate * item.unit;
         }
         pdfkit
             .fontSize(10)
@@ -90,14 +89,9 @@ class QuoteGenerator {
                     bold: true,
                 }
             )
-            .text(
-                `${QuoteGenerator.totalAmount}`,
-                _kAMOUNT_X,
-                _kTABLE_TOP_Y + 25 + items.length * 25,
-                {
-                    bold: true,
-                }
-            );
+            .text(`${quote.totalAmount}`, _kAMOUNT_X, _kTABLE_TOP_Y + 25 + items.length * 25, {
+                bold: true,
+            });
     }
     generateFooter(pdfkit) {
         pdfkit

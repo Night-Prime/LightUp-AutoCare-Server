@@ -6,7 +6,7 @@ class InvoiceGenerator {
     constructor(invoice) {
         this.invoice = invoice;
     }
-    static totalAmount = 0;
+    //static totalAmount = 0;
     async generate() {
         let pdfkit = new _PDFKIT();
         let pdfOutputFile = `./Invoice-${this.invoice.invoiceId}.pdf`;
@@ -87,7 +87,7 @@ class InvoiceGenerator {
                 .text(`${item.rate}`, _kPRICE_X, yCoord)
                 .text(`${item.rate * item.unit}`, _kAMOUNT_X, yCoord);
             this.generateHr(pdfkit, yCoord + 20);
-            InvoiceGenerator.totalAmount += item.rate * item.unit;
+            //InvoiceGenerator.totalAmount += item.rate * item.unit;
         }
         pdfkit
             .fontSize(10)
@@ -99,14 +99,9 @@ class InvoiceGenerator {
                     bold: true,
                 }
             )
-            .text(
-                `${InvoiceGenerator.totalAmount}`,
-                _kAMOUNT_X,
-                _kTABLE_TOP_Y + 25 + items.length * 25,
-                {
-                    bold: true,
-                }
-            );
+            .text(`${quote.totalAmount}`, _kAMOUNT_X, _kTABLE_TOP_Y + 25 + items.length * 25, {
+                bold: true,
+            });
     }
     generateFooter(pdfkit) {
         pdfkit
