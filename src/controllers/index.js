@@ -44,7 +44,7 @@ class Controller {
         try {
             const n = (await this.model.estimatedDocumentCount()) + 1;
             data['invoiceId'] = `INV-${data.invoiceId}${n}`;
-            const recordToCreate = new this.model({ id: n, ...data });
+            const recordToCreate = new this.model({ id: n, _id: n, ...data });
             const createdRecord = await recordToCreate.save();
 
             return { ...Controller.jsonize(createdRecord) };
