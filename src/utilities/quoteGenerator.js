@@ -89,7 +89,7 @@ class QuoteGenerator {
                     bold: true,
                 }
             )
-            .text(`${quote.totalAmount}`, _kAMOUNT_X, _kTABLE_TOP_Y + 25 + items.length * 25, {
+            .text(`${this.quote.totalAmount}`, _kAMOUNT_X, _kTABLE_TOP_Y + 25 + items.length * 25, {
                 bold: true,
             });
     }
