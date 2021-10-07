@@ -16,7 +16,7 @@ createPasswordEmitter.on('createPassword', async function (request, user) {
         from: process.env.email, // sender address
         to: user.email,
         subject: `Update profile by creating password`,
-        text: `Hi ${user.name}. \n Update your password for your account by clicking this link below. This link would be valid within the next 24hrs for updating your password.\n ${BASE_URL}/createPassword?email=${user.email}&password_token=${token}`,
+        text: `Hi ${user.name}. \n Update your password for your account by clicking this link below. This link would be valid within the next 24hrs for updating your password.\n ${BASE_URL}/createPassword?password_token=${token}`,
         html: '<b>LightUp AutoCare</b>',
     };
     const transportPayload = {

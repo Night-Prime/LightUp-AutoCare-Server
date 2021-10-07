@@ -14,14 +14,14 @@ class StaffService extends RootService {
 
     async createPassword(request, next) {
         try {
-            const { body, query } = request;
+            const { body } = request;
             let { confirmPassword, password } = body;
             if (confirmPassword !== password) {
                 const err = this.processFailedResponse(`Passwords do not match`, 400);
                 return next(err);
             }
             password = await hashObject(password);
-            const result = await this.sampleController.updateStaffPassword(query.email, {
+            const result = await this.sampleController.updateStaffPassword(request.email, {
                 password: password,
             });
             if (result.failed) {
