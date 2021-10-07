@@ -71,12 +71,10 @@ class StaffService extends RootService {
             const { email, password } = request.body;
 
             const [user] = await this.sampleController.readRecords({ email });
-            console.log(user);
             if (!user) {
                 const err = this.processFailedResponse(`User doesn't exist`, 404);
                 return next(err);
             }
-            if (user.failed) throw new Error(user.error);
             if (user.isDeleted) {
                 const err = this.processFailedResponse(`User doesn't exist again`, 404);
                 return next(err);
