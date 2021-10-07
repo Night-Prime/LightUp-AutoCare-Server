@@ -7,6 +7,10 @@ const StaffSchema = new Schema({
         unique: true,
         default: 0,
     },
+    _id: {
+        type: Number,
+        required: true,
+    },
     name: {
         type: String,
         required: true,

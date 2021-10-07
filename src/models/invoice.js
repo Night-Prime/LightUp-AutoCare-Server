@@ -6,6 +6,10 @@ const InvoiceSchema = new Schema({
         required: true,
         unique: true,
     },
+    _id: {
+        type: Number,
+        required: true,
+    },
     invoiceId: {
         type: String,
         required: true,

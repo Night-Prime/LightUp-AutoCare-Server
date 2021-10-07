@@ -169,6 +169,14 @@ class QuoteService extends RootService {
                 throw new Error('Requires admin or approver privilege');
             }
 
+            if (
+                !data.isPending &&
+                data.isApproved &&
+                (request.role !== 'admin' || request.role !== 'approver')
+            ) {
+                throw new Error('Requires admin or approver privilege');
+            }
+
             let arrayToPush = {
                 quoteHistory: {
                     updatedById: request.id,

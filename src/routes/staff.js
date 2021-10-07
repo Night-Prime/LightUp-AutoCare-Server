@@ -19,7 +19,7 @@ try {
             request.payload = await staffService.updateRecordById(request, next);
             next();
         })
-        .put('/password/create', async (request, response, next) => {
+        .put('/password/create', verifyToken, async (request, response, next) => {
             request.payload = await staffService.createPassword(request, next);
             next();
         })
