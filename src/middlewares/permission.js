@@ -1,4 +1,3 @@
-require('dotenv').config();
 const { checkToken } = require('../utilities/packages');
 const responseError = {
     status: 401,
