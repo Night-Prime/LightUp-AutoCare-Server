@@ -14,11 +14,11 @@ try {
             request.payload = await invoiceService.createRecord(request, next);
             next();
         })
-        .get('/', verifyToken, checkAccessRight, async (request, response, next) => {
+        .get('/', verifyToken, async (request, response, next) => {
             request.payload = await invoiceService.readRecordsByFilter(request, next);
             next();
         })
-        .get('/:id', verifyToken, checkAccessRight, async (request, response, next) => {
+        .get('/:id', verifyToken, async (request, response, next) => {
             request.payload = await invoiceService.readRecordById(request, next);
             next();
         })
