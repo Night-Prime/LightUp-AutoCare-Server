@@ -41,6 +41,11 @@ const verifyToken = async (request, response, next) => {
     if (!bearerToken) {
         next(responseError);
     }
+    console.log({
+        bearerToken,
+        body: request.body,
+        request: request.headers['authorization'],
+    });
     await checkToken(bearerToken)
         .then((decoded) => {
             // Append the parameters to the request object
@@ -49,6 +54,8 @@ const verifyToken = async (request, response, next) => {
             request.role = decoded.role;
             request.name = decoded.name;
             request.email = decoded.email;
+
+            console.log(request.email);
             next();
         })
         .catch((error) => {
