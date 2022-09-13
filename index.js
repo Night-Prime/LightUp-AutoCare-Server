@@ -35,7 +35,7 @@ app.use(morgan);
 app.use('/', require('./src/routes/_config'));
 
 let ON = PORT || APP_PORT;
-
+console.log(ON, typeof ON)
 /** Starting Server */
 app.listen(ON, () => {
     console.log(`Server started on port ${ON}`);
