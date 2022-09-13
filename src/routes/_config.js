@@ -16,6 +16,9 @@ const sampleRouteHandler = require('./sample'),
 
 /** Cross Origin Handling */
 router.use(setupRequest);
+router.use('/', (req, res) => {
+    res.send('This is a Server!');
+});
 router.use('/samples', sampleRouteHandler);
 router.use('/clients', clientRouteHandler);
 router.use('/vehicles', vehicleRouteHandler);
