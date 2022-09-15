@@ -9,7 +9,7 @@ const express = require('express');
 const compression = require('compression');
 const cors = require('cors');
 const helmet = require('helmet');
-const io = require('socket.io')(app, { cors: { origin: '*' } });
+// const io = require('socket.io')(app, { cors: { origin: '*' } });
 
 const { morgan } = require('./src/utilities/logger');
 const { loadEventSystem } = require('./src/events/_loader');
