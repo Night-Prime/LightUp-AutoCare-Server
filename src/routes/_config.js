@@ -9,10 +9,10 @@ const { handle404, handleError, setupRequest, processResponse } = require('../mi
 const clientRouteHandler = require('./client');
 const vehicleRouteHandler = require('./vehicle');
 const quoteRouteHandler = require('./quote');
-const sampleRouteHandler = require('./sample'),
-    invoiceRouteHandler = require('./invoice'),
-    staffRouteHandler = require('./staff'),
-    personalisedServiceRouteHandler = require('./personalisedService');
+const sampleRouteHandler = require('./sample');
+const invoiceRouteHandler = require('./invoice');
+const staffRouteHandler = require('./staff');
+const personalisedServiceRouteHandler = require('./personalisedService');
 
 /** Cross Origin Handling */
 router.use(setupRequest);

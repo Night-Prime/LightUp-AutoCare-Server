@@ -23,6 +23,8 @@
     "pdfkit": "^0.12.3",
     "redis": "^3.1.2",
     "request": "^2.88.2",
+    "socket.io": "^4.5.2",
+    "stripe": "^10.8.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {
