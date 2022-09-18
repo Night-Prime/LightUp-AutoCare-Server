@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-use-before-define */
 /**
  * @author Oguntuberu Nathan O. <nateoguns.work@gmail.com>
@@ -5,11 +7,13 @@
 
 require('dotenv').config();
 
+const stripe = require('stripe')(
+    'sk_test_51LdYVzEeDGSxgmW9ZDyUpn8Et1h5KDPUFYgpvVNA6p7Vr65Ou6IHwwNE9ZlAcbh8ERaE7drFkgb9jDZs54oxkoMk004ZF78Hyw'
+);
 const express = require('express');
 const compression = require('compression');
 const cors = require('cors');
 const helmet = require('helmet');
-// const io = require('socket.io')(app, { cors: { origin: '*' } });
 
 const { morgan } = require('./src/utilities/logger');
 const { loadEventSystem } = require('./src/events/_loader');
@@ -36,50 +40,43 @@ app.use(morgan);
 /** Route Middleware */
 app.use('/', require('./src/routes/_config'));
 
-// /** Socket communications */
-// const userList = new Map();
-
-// io.on('connection', (socket) => {
-//     const { userName } = socket.handshake.query.userName;
-//     addUser(userName, socket.id);
-
-//     socket.broadcast.emit('user-list', [...userList.keys()]); // --getting the array of methods
-//     socket.emit('user-list', [...userList.keys()]);
-
-//     socket.on('message', (msg) => {
-//         // eslint-disable-next-line object-shorthand
-//         socket.broadcast.emit('message-broadcast', { message: msg, userName: userName });
-//     });
-
-//     // eslint-disable-next-line no-unused-vars
-//     socket.on('disconnect', (reason) => {
-//         // eslint-disable-next-line no-use-before-define
-//         removeUser(userName, socket.id);
-//     });
-// });
-
-// // to create a user
-// function addUser(userName, id) {
-//     if (!userList.has(userName)) {
-//         userList.set(userName, new Set(id));
-//     } else {
-//         userList.get(userName).add(id);
-//     }
-// }
-
-// // to delete user
-// // eslint-disable-next-line no-unused-vars
-// function removeUser(userName, id) {
-//     if (userList.has(userName)) {
-//         const userIds = userList.get(userName);
-//         // eslint-disable-next-line eqeqeq
-//         if (userIds.size == 0) {
-//             userList.delete(userName);
-//         }
-//     }
-// }
-
 const ON = PORT || APP_PORT;
+
+// Payment Integration ---testEmail
+// checkout request to Stripe API
+app.post('/checkout', (req, res) => {
+    console.log(req.body);
+    try {
+        console.log(req.body);
+        // eslint-disable-next-line no-undef
+        token = req.body.token;
+        const customer = stripe.customers
+            .create({
+                email: 'danieltunde@gmail.com',
+                source: token.id,
+            })
+            // eslint-disable-next-line no-shadow
+            .then((customer) => {
+                console.log(customer);
+                return stripe.charges.create({
+                    amount: 1000,
+                    description: 'Test Purchase using express and Node',
+                    currency: 'NGN',
+                    customer: customer.id,
+                });
+            })
+            .then((charge) => {
+                console.log(charge);
+                res.json({ data: 'success' });
+            })
+            .catch((err) => {
+                res.json({ data: 'failure' });
+            });
+        return true;
+    } catch (error) {
+        return false;
+    }
+});
 
 /** Starting Server */
 app.listen(ON, () => {
