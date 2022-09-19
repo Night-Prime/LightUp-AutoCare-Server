@@ -3,7 +3,7 @@ const Controller = require('../controllers/index');
 const invoiceSchemaValidator = require('../validators/invoice');
 
 const invoiceController = new Controller('Invoice');
-const InvoiceService = require('../services/invoice/invoice.js');
+const InvoiceService = require('../services/invoice/invoice');
 const { checkAccessRight, verifyToken } = require('../middlewares/permission');
 
 const invoiceService = new InvoiceService(invoiceController, invoiceSchemaValidator);

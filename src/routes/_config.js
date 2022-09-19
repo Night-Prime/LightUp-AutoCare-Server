@@ -12,6 +12,7 @@ const quoteRouteHandler = require('./quote');
 const sampleRouteHandler = require('./sample');
 const invoiceRouteHandler = require('./invoice');
 const staffRouteHandler = require('./staff');
+const paymentRouteHandler = require('./payment');
 const personalisedServiceRouteHandler = require('./personalisedService');
 
 /** Cross Origin Handling */
