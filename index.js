@@ -7,9 +7,6 @@
 
 require('dotenv').config();
 
-const stripe = require('stripe')(
-    'sk_test_51LdYVzEeDGSxgmW9ZDyUpn8Et1h5KDPUFYgpvVNA6p7Vr65Ou6IHwwNE9ZlAcbh8ERaE7drFkgb9jDZs54oxkoMk004ZF78Hyw'
-);
 const express = require('express');
 const compression = require('compression');
 const cors = require('cors');
