@@ -12,7 +12,8 @@ try {
             console.log(req.body);
             // eslint-disable-next-line no-undef
             const { token } = req.body;
-            stripe.customers
+            // eslint-disable-next-line no-unused-vars
+            const customer = stripe.customers
                 .create({
                     email: 'danieltunde@gmail.com',
                     source: token.id,

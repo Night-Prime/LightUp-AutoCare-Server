@@ -13,6 +13,7 @@ const sampleRouteHandler = require('./sample');
 const invoiceRouteHandler = require('./invoice');
 const staffRouteHandler = require('./staff');
 const paymentRouteHandler = require('./payment');
+const chatRouteHandler = require('./chat');
 const personalisedServiceRouteHandler = require('./personalisedService');
 
 /** Cross Origin Handling */
@@ -27,6 +28,7 @@ router.use('/quotes', quoteRouteHandler);
 router.use('/invoices', invoiceRouteHandler);
 router.use('/staffs', staffRouteHandler);
 router.use('/checkout', paymentRouteHandler);
+router.use('/chats', chatRouteHandler);
 
 router.use('/personalisedServices', personalisedServiceRouteHandler);
 router.use(processResponse);
