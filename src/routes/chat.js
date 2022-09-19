@@ -1,45 +1,50 @@
-const io = require('socket.io')({ cors: { origin: '*' } });
-const router = require('express').Router();
+/* eslint-disable no-unused-vars */
+const socket = require('socket.io');
 
 const userList = new Map();
 
-try {
-    router.get('/', (req, res) => {
-        res.send('Chat feature');
-    });
-    router.all('/', () => {
-        // to create a user
-        function addUser(userName, id) {
-            if (!userList.has(userName)) {
-                userList.set(userName, new Set(id));
-            } else {
-                userList.get(userName).add(id);
-            }
-        }
-        // to delete user
-        function removeUser(userName) {
-            if (userList.has(userName)) {
-                const userIds = userList.get(userName);
-                if (userIds.size === 0) {
-                    userList.delete(userName);
-                }
-            }
-        }
-        io.on('connection', (socket) => {
+class SocketIO {
+    constructor(http) {
+        this.io = socket(http, { cors: { origin: '*' } });
+    }
+
+    init() {
+        // eslint-disable-next-line no-shadow
+        this.io.on('connection', (socket) => {
             const { userName } = socket.handshake.query;
-            addUser(userName, socket.id);
+            // addUser(userName, socket.id);
+
+            // eslint-disable-next-line max-len
             socket.broadcast.emit('user-list', [...userList.keys()]); // --getting the array of methods
             socket.emit('user-list', [...userList.keys()]);
             socket.on('message', (msg) => {
                 socket.broadcast.emit('message-broadcast', { message: msg, userName });
             });
-            socket.on('disconnect', () => {
-                removeUser(userName, socket.id);
+
+            socket.on('disconnect', (reason) => {
+                // removeUser(userName, socket.id);
             });
         });
-    });
-} catch (e) {
-    console.log(`[Route Error] /chat: ${e.message}`);
-} finally {
-    module.exports = router;
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    addUser(userName, id) {
+        if (!userList.has(userName)) {
+            userList.set(userName, new Set(id));
+        } else {
+            userList.get(userName).add(id);
+        }
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    removeUser(userName) {
+        if (userList.has(userName)) {
+            const userIds = userList.get(userName);
+            if (userIds.length === 0) {
+                userList.remove(userName);
+            }
+        }
+    }
 }
+
+module.exports = SocketIO;
