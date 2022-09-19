@@ -27,6 +27,9 @@ router.use('/quotes', quoteRouteHandler);
 router.use('/invoices', invoiceRouteHandler);
 router.use('/staffs', staffRouteHandler);
 router.use('/checkout', paymentRouteHandler);
+router.use('/checkout', (req, res) => {
+    res.send('This is Checkout');
+});
 router.use('/personalisedServices', personalisedServiceRouteHandler);
 router.use(processResponse);
 

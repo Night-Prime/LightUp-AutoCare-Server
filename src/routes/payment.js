@@ -5,7 +5,7 @@ const stripe = require('stripe')(process.env.APP_STRIPE_KEY);
 
 try {
     router.post('/', (req, res) => {
-        res.send('Checkout successful!');
+        console.log(req.body);
         try {
             console.log(req.body);
             // eslint-disable-next-line no-undef
