@@ -1,13 +1,15 @@
+require('dotenv').config();
+
 const router = require('express').Router();
+const stripe = require('stripe')(process.env.APP_STRIPE_KEY);
 
 try {
     router.post('/checkout', (req, res) => {
-        console.log(req.body);
         try {
             console.log(req.body);
             // eslint-disable-next-line no-undef
-            token = req.body.token;
-            const customer = stripe.customers
+            const { token } = req.body;
+            stripe.customers
                 .create({
                     email: 'danieltunde@gmail.com',
                     source: token.id,

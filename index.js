@@ -42,42 +42,6 @@ app.use('/', require('./src/routes/_config'));
 
 const ON = PORT || APP_PORT;
 
-// Payment Integration
-// checkout request to Stripe API
-// app.post('/checkout', (req, res) => {
-//     console.log(req.body);
-//     try {
-//         console.log(req.body);
-//         // eslint-disable-next-line no-undef
-//         token = req.body.token;
-//         const customer = stripe.customers
-//             .create({
-//                 email: 'danieltunde@gmail.com',
-//                 source: token.id,
-//             })
-//             // eslint-disable-next-line no-shadow
-//             .then((customer) => {
-//                 console.log(customer);
-//                 return stripe.charges.create({
-//                     amount: 1000,
-//                     description: 'Test Purchase using express and Node',
-//                     currency: 'NGN',
-//                     customer: customer.id,
-//                 });
-//             })
-//             .then((charge) => {
-//                 console.log(charge);
-//                 res.json({ data: 'success' });
-//             })
-//             .catch((err) => {
-//                 res.json({ data: 'failure' });
-//             });
-//         return true;
-//     } catch (error) {
-//         return false;
-//     }
-// });
-
 /** Starting Server */
 app.listen(ON, () => {
     console.log(`Server started on port ${ON}`);
