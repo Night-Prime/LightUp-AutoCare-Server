@@ -4,7 +4,7 @@ const router = require('express').Router();
 const stripe = require('stripe')(process.env.APP_STRIPE_KEY);
 
 try {
-    router.post('/checkout', (req, res) => {
+    router.post('/', (req, res) => {
         res.send('Checkout successful!');
         try {
             console.log(req.body);
