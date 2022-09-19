@@ -4,8 +4,10 @@ const router = require('express').Router();
 const stripe = require('stripe')(process.env.APP_STRIPE_KEY);
 
 try {
+    router.get('/', (req, res) => {
+        res.send('Data is here!');
+    });
     router.post('/', (req, res) => {
-        console.log(req.body);
         try {
             console.log(req.body);
             // eslint-disable-next-line no-undef

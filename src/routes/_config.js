@@ -17,7 +17,7 @@ const personalisedServiceRouteHandler = require('./personalisedService');
 
 /** Cross Origin Handling */
 router.use(setupRequest);
-router.use('/', (req, res) => {
+router.all('/', (req, res) => {
     res.send('This is a Server!');
 });
 router.use('/samples', sampleRouteHandler);
@@ -27,9 +27,7 @@ router.use('/quotes', quoteRouteHandler);
 router.use('/invoices', invoiceRouteHandler);
 router.use('/staffs', staffRouteHandler);
 router.use('/checkout', paymentRouteHandler);
-router.use('/checkout', (req, res) => {
-    res.send('This is Checkout');
-});
+
 router.use('/personalisedServices', personalisedServiceRouteHandler);
 router.use(processResponse);
 
