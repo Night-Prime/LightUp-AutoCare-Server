@@ -26,6 +26,7 @@ router.use('/vehicles', vehicleRouteHandler);
 router.use('/quotes', quoteRouteHandler);
 router.use('/invoices', invoiceRouteHandler);
 router.use('/staffs', staffRouteHandler);
+router.use('/checkout', paymentRouteHandler);
 router.use('/personalisedServices', personalisedServiceRouteHandler);
 router.use(processResponse);
 

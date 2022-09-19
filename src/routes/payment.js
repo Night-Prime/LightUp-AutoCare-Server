@@ -35,7 +35,7 @@ try {
         }
     });
 } catch (e) {
-    console.log(`[Route Error] /payment: ${e.message}`);
+    console.log(`[Route Error] /checkout: ${e.message}`);
 } finally {
     module.exports = router;
 }
