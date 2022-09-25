@@ -14,6 +14,7 @@ const invoiceRouteHandler = require('./invoice');
 const staffRouteHandler = require('./staff');
 const paymentRouteHandler = require('./payment');
 const personalisedServiceRouteHandler = require('./personalisedService');
+const AuthRouteHandler = require('./Oauth');
 
 /** Cross Origin Handling */
 router.use(setupRequest);
@@ -27,6 +28,7 @@ router.use('/quotes', quoteRouteHandler);
 router.use('/invoices', invoiceRouteHandler);
 router.use('/staffs', staffRouteHandler);
 router.use('/checkout', paymentRouteHandler);
+router.use('/auth', AuthRouteHandler);
 
 router.use('/personalisedServices', personalisedServiceRouteHandler);
 router.use(processResponse);
