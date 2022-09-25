@@ -1,3 +1,5 @@
+/* eslint-disable import/no-dynamic-require */
+/* eslint-disable global-require */
 /**
  * @author Oguntuberu Nathan O. <nateoguns.work@gmail.com>
  * */
@@ -37,6 +39,7 @@ module.exports.loadModels = () => {
     const files = glob.sync('*.js', { cwd: basePath });
     files.forEach((file) => {
         if (file.toLocaleLowerCase().includes('_config')) return;
+        // eslint-disable-next-line security/detect-non-literal-require
         require(resolve(basePath, file));
     });
 };

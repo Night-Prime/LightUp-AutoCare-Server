@@ -43,7 +43,7 @@ class Controller {
     async createInvoice(data) {
         try {
             const n = (await this.model.estimatedDocumentCount()) + 1;
-            data['invoiceId'] = `INV-${data.invoiceId}${n}`;
+            data.invoiceId = `INV-${data.invoiceId}${n}`;
             const recordToCreate = new this.model({ id: n, _id: n, ...data });
             const createdRecord = await recordToCreate.save();
 
@@ -56,7 +56,7 @@ class Controller {
     async createQuote(data) {
         try {
             const n = (await this.model.estimatedDocumentCount()) + 1;
-            data['quoteId'] = `QUO-${data.quoteId}${n}`;
+            data.quoteId = `QUO-${data.quoteId}${n}`;
             const recordToCreate = new this.model({ id: n, _id: n, ...data });
             const createdRecord = await recordToCreate.save();
 
@@ -116,7 +116,7 @@ class Controller {
         try {
             const dataToSet = Controller.deleteRecordMetadata(data);
             const result = await this.model.updateOne(
-                { email: email },
+                { email },
                 { ...dataToSet, $currentDate: { updatedOn: true } }
             );
             return Controller.jsonize({ ...result, data });
@@ -131,9 +131,7 @@ class Controller {
             const result = await this.model.updateMany(
                 { ...conditions },
                 {
-                    $set: {
-                        ...dataToSet,
-                    },
+                    $set: { ...dataToSet },
                     $push: { ...arrayToPush },
                 }
             );
@@ -163,7 +161,7 @@ class Controller {
 
     async populateVirtually(id) {
         try {
-            let a = await this.model.aggregate([
+            const a = await this.model.aggregate([
                 {
                     $match: {
                         ...id,

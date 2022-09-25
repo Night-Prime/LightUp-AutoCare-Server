@@ -12,6 +12,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const httpServer = require('http');
 const SocketIO = require('./src/routes/chat');
+const pushNotifications = require('./src/utilities/pushNotifications');
 
 const { morgan } = require('./src/utilities/logger');
 const { loadEventSystem } = require('./src/events/_loader');
