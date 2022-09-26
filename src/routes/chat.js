@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 const socket = require('socket.io');
+const pushNotifications = require('../utilities/pushNotifications');
 
 const userList = new Map();
 
@@ -12,17 +13,19 @@ class SocketIO {
         // eslint-disable-next-line no-shadow
         this.io.on('connection', (socket) => {
             const { userName } = socket.handshake.query;
-            // addUser(userName, socket.id);
+            this.addUser(userName, socket.id);
 
             // eslint-disable-next-line max-len
             socket.broadcast.emit('user-list', [...userList.keys()]); // --getting the array of methods
             socket.emit('user-list', [...userList.keys()]);
             socket.on('message', (msg) => {
                 socket.broadcast.emit('message-broadcast', { message: msg, userName });
+                const notification = pushNotifications();
+                return notification;
             });
 
             socket.on('disconnect', (reason) => {
-                // removeUser(userName, socket.id);
+                this.removeUser(userName, socket.id);
             });
         });
     }

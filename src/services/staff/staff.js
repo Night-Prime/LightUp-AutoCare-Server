@@ -1,3 +1,5 @@
+/* eslint-disable prefer-destructuring */
+/* eslint-disable no-unused-vars */
 const RootService = require('../_root');
 const { buildQuery, buildWildcardOptions } = require('../../utilities/query');
 const { generateToken, hashObject, verifyObject } = require('../../utilities/packages');
@@ -16,8 +18,9 @@ class StaffService extends RootService {
         try {
             const { body } = request;
             let { confirmPassword, password } = body;
+            // eslint-disable-next-line security/detect-possible-timing-attacks
             if (confirmPassword !== password) {
-                const err = this.processFailedResponse(`Passwords do not match`, 400);
+                const err = this.processFailedResponse('Passwords do not match', 400);
                 return next(err);
             }
             password = await hashObject(password);
@@ -46,6 +49,7 @@ class StaffService extends RootService {
                 return next(err);
             }
             delete body.id;
+            // eslint-disable-next-line no-unused-expressions
             body.password ? (body.password = await hashObject(body.password)) : body;
 
             const result = await this.sampleController.createRecord({ ...body });
@@ -68,28 +72,44 @@ class StaffService extends RootService {
 
     async authenticateUser(request, next) {
         try {
-            const { email, password } = request.body;
+            const { email, password, isSocial = false, userDetails = {} } = request.body;
+            let user;
+            if (isSocial) {
+                const { email: userMail, password: userPassword, ...rest } = userDetails;
+                if (!userDetails.email) {
+                    console.log('User has no email!');
+                } else if (!userDetails.name) {
+                    console.log('User has no name!');
+                }
+                user = await this.sampleController.findAndModify({
+                    filter: { email: userMail, password: userPassword },
+                    data: { ...rest },
+                });
+            } else {
+                user = await this.sampleController.readRecords({ email });
+                user = user[0];
 
-            const [user] = await this.sampleController.readRecords({ email });
-            if (!user) {
-                const err = this.processFailedResponse(`User doesn't exist`, 404);
-                return next(err);
-            }
-            if (user.isDeleted) {
-                const err = this.processFailedResponse(`User doesn't exist again`, 404);
-                return next(err);
-            }
-            if (!user.password) {
-                const err = this.processFailedResponse(
-                    `This user doesn't have a password yet`,
-                    404
-                );
-                return next(err);
-            }
-            const validPassword = await verifyObject(password, user.password);
-            if (!validPassword) {
-                const err = this.processFailedResponse(`Invalid Password`, 400);
-                return next(err);
+                if (!user) {
+                    const err = this.processFailedResponse("User doesn't exist", 404);
+                    return next(err);
+                }
+                if (user.isDeleted) {
+                    const err = this.processFailedResponse("User doesn't exist again", 404);
+                    return next(err);
+                }
+                console.log(user)
+                if (!user.password) {
+                    const err = this.processFailedResponse(
+                        "This user doesn't have a password yet",
+                        404
+                    );
+                    return next(err);
+                }
+                const validPassword = await verifyObject(password, user.password);
+                if (!validPassword) {
+                    const err = this.processFailedResponse('Invalid Password', 400);
+                    return next(err);
+                }
             }
             const token = await generateToken({
                 id: user.id,
@@ -117,7 +137,7 @@ class StaffService extends RootService {
         try {
             const { id } = request.params;
             if (!id) {
-                const err = this.processFailedResponse(`Invalid Id`, 400);
+                const err = this.processFailedResponse('Invalid Id', 400);
                 return next(err);
             }
 

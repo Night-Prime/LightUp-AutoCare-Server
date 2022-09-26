@@ -3,6 +3,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 const OneSignal = require('@onesignal/node-onesignal');
+require('dotenv').config();
 
 async function pushNotifications() {
     const userKeyProvider = {
@@ -41,5 +42,6 @@ async function pushNotifications() {
     const response = await client.getNotification(process.env.ONESIGNAL_APP_ID, id);
     console.log(response);
 }
+console.log(pushNotifications);
 
-module.exports = pushNotifications;
+module.exports = { pushNotifications };

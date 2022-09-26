@@ -5,5 +5,6 @@ module.exports = Joi.object({
     name: Joi.string().required().min(3).max(30),
     email: Joi.string().email({ minDomainSegments: 2 }).required(),
     role: Joi.string().valid('admin', 'approver', 'clerk').required(),
-    password: Joi.string(),
+    password: Joi.string().optional(),
+    isSocial: Joi.boolean().optional(),
 });

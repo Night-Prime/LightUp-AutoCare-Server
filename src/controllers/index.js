@@ -40,6 +40,18 @@ class Controller {
         }
     }
 
+    async findAndModify({ filter, data, options = { upsert: true, returnNewDocument: true } }) {
+        try {
+            const n = (await this.model.estimatedDocumentCount()) + 1;
+            // eslint-disable-next-line no-param-reassign
+            data = { ...data, id: n, _id: n };
+            const recordToCreate = await this.model.findOneAndUpdate(filter, data, options);
+            return { ...Controller.jsonize(recordToCreate) };
+        } catch (e) {
+            return Controller.processError(e.message);
+        }
+    }
+
     async createInvoice(data) {
         try {
             const n = (await this.model.estimatedDocumentCount()) + 1;
@@ -210,7 +222,7 @@ class Controller {
                 })
                 .exec();
         } catch (error) {
-            return Controller.processError(e.message);
+            return Controller.processError(error.message);
         }
     }
 }

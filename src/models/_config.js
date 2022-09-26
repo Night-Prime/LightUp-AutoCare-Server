@@ -22,6 +22,7 @@ module.exports.connect = () => {
                 useCreateIndex: true,
             },
             (err) => {
+                // mongoose.db('admin').collection('zzznovaq');
                 if (err) {
                     console.log('Could not connect to database');
                     return;

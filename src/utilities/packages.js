@@ -25,9 +25,14 @@ async function hashObject(object) {
 }
 
 async function verifyObject(sentObject, dbObject) {
+    try{
+        console.log(sentObject)
     const isMatch = await bcrypt.compare(sentObject, dbObject);
 
     return isMatch;
+    }catch(e){
+        console.log(e)
+    }
 }
 
 async function generateToken(payload) {

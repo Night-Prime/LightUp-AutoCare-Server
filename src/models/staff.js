@@ -27,6 +27,7 @@ const StaffSchema = new Schema({
     },
     password: {
         type: String,
+        required: true,
     },
     // Model Required fields
     isActive: {
