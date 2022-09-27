@@ -41,7 +41,7 @@ socket.init();
 
 /** Route Middleware */
 app.use('/', require('./src/routes/_config'));
-
+ 
 const ON = PORT || APP_PORT;
 
 /** Starting Server */
