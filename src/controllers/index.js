@@ -44,7 +44,7 @@ class Controller {
         try {
             const n = (await this.model.estimatedDocumentCount()) + 1;
             // eslint-disable-next-line no-param-reassign
-            data = { ...data, id: n, _id: n };
+            data = { ...data, id: n};
             const recordToCreate = await this.model.findOneAndUpdate(filter, data, options);
             return { ...Controller.jsonize(recordToCreate) };
         } catch (e) {

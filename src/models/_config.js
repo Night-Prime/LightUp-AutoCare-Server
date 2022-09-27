@@ -20,6 +20,7 @@ module.exports.connect = () => {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
                 useCreateIndex: true,
+                useFindAndModify: true,
             },
             (err) => {
                 // mongoose.db('admin').collection('zzznovaq');
