@@ -23,7 +23,6 @@ module.exports.connect = () => {
                 useFindAndModify: true,
             },
             (err) => {
-                // mongoose.db('admin').collection('zzznovaq');
                 if (err) {
                     console.log('Could not connect to database');
                     return;
