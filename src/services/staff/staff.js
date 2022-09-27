@@ -75,20 +75,22 @@ class StaffService extends RootService {
             const { email, password, isSocial = false, userDetails = {} } = request.body;
             let user;
             if (isSocial) {
-                const { email: userMail, password: userPassword, ...rest } = userDetails;
+                console.log(`i am here`);
+                const { email: userMail, ...rest } = userDetails;
                 if (!userDetails.email) {
                     console.log('User has no email!');
                 } else if (!userDetails.name) {
                     console.log('User has no name!');
                 }
                 user = await this.sampleController.findAndModify({
-                    filter: { email: userMail, password: userPassword },
+                    filter: { email: userMail },
                     data: { ...rest },
                 });
+                console.log(user);
             } else {
                 user = await this.sampleController.readRecords({ email });
                 user = user[0];
-
+                console.log('hello 2');
                 if (!user) {
                     const err = this.processFailedResponse("User doesn't exist", 404);
                     return next(err);
@@ -97,7 +99,7 @@ class StaffService extends RootService {
                     const err = this.processFailedResponse("User doesn't exist again", 404);
                     return next(err);
                 }
-                console.log(user)
+                console.log(user);
                 if (!user.password) {
                     const err = this.processFailedResponse(
                         "This user doesn't have a password yet",
@@ -122,6 +124,7 @@ class StaffService extends RootService {
                 ...user,
                 token,
             };
+            console.log('hello 1')
             return this.processSingleRead(result);
         } catch (e) {
             console.log(e);
