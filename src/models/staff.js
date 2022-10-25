@@ -1,6 +1,10 @@
 const { model, Schema } = require('mongoose');
 
 const StaffSchema = new Schema({
+    _id: {
+        type: Number || String,
+        unique: true,
+    },
     id: {
         type: Number,
         required: true,
